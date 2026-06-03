@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="TestSuite" time="0.0" tests="1" errors="0" skipped="0" failures="1">
-    <testcase name="DeleteTests.deleteDuckTest" classname="autotests.duckControllerTests.DeleteTests" time="0.0">
+<testsuite name="autotests.duckActionControllerTests.FlyTests" time="0.0" tests="1" errors="0" skipped="0" failures="1">
+    <testcase name="FlyTests.fly3" classname="autotests.duckActionControllerTests.FlyTests" time="0.0">
       <failure type="com.consol.citrus.exceptions.ValidationException" message="Validation failed: Values not equal for header element &apos;citrus_http_reason_phrase&apos;, expected &apos;OK&apos; but was &apos;INTERNAL_SERVER_ERROR&apos;">
         <![CDATA[
         com.consol.citrus.exceptions.ValidationException: Validation failed: Values not equal for header element 'citrus_http_reason_phrase', expected 'OK' but was 'INTERNAL_SERVER_ERROR'
@@ -14,8 +14,8 @@
 	at com.consol.citrus.DefaultTestCase.executeAction(DefaultTestCase.java:136)
 	at com.consol.citrus.DefaultTestCaseRunner.run(DefaultTestCaseRunner.java:125)
 	at com.consol.citrus.TestActionRunner.$(TestActionRunner.java:35)
-	at autotests.duckControllerTests.DeleteTests.validateResponse(DeleteTests.java:37)
-	at autotests.duckControllerTests.DeleteTests.deleteDuckTest(DeleteTests.java:23)
+	at autotests.duckActionControllerTests.FlyTests.validateResponse(FlyTests.java:49)
+	at autotests.duckActionControllerTests.FlyTests.fly3(FlyTests.java:37)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

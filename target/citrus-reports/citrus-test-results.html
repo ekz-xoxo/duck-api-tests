@@ -96,7 +96,7 @@
                 <tbody>
                     <tr class="even">
                         <th>Total</th>
-                        <td>2</td>
+                        <td>1</td>
                     </tr>
                     <tr class="odd">
                         <th>Skipped</th>
@@ -104,22 +104,22 @@
                     </tr>
                     <tr class="even">
                         <th>Failed</th>
-                        <td>1&nbsp;&nbsp;|&nbsp;&nbsp;50.0%</td>
+                        <td>1&nbsp;&nbsp;|&nbsp;&nbsp;100.0%</td>
                     </tr>
                     <tr class="odd">
                         <th>Successful</th>
-                        <td>1&nbsp;&nbsp;|&nbsp;&nbsp;50.0%</td>
+                        <td>0&nbsp;&nbsp;|&nbsp;&nbsp;0.0%</td>
                     </tr>
                 </tbody>
             </table>
 
-            <h1>Tests results (2 Tests)</h1>
+            <h1>Tests results (1 Tests)</h1>
             <table id="test-results">
                 <tbody>
-                    <tr class="failure" onmouseover="showTooltip('PropertiesTests.properties1Info', event);" onmouseout="hideTooltip();">
-    <th>PropertiesTests.properties1
-        <span class="tooltip" id="PropertiesTests.properties1Info">
-        <b><i>PropertiesTests.properties1</i></b><br/>
+                    <tr class="failure" onmouseover="showTooltip('DeleteTests.deleteDuckTestInfo', event);" onmouseout="hideTooltip();">
+    <th>DeleteTests.deleteDuckTest
+        <span class="tooltip" id="DeleteTests.deleteDuckTestInfo">
+        <b><i>DeleteTests.deleteDuckTest</i></b><br/>
         <b>Author:</b> <br/>
         <b>Status:</b> DRAFT<br/>
         <b>Creation Date:</b> <br/>
@@ -130,11 +130,11 @@
     </th>
     <td>FAILURE</td>
 </tr>
-<tr><td colspan="2"><div class="error-detail"><pre>com.consol.citrus.exceptions.CitrusRuntimeException: Failed to evaluate JSON path expression: $.height
+<tr><td colspan="2"><div class="error-detail"><pre>com.consol.citrus.exceptions.ValidationException: Validation failed: Values not equal for header element 'citrus_http_reason_phrase', expected 'OK' but was 'INTERNAL_SERVER_ERROR'
  
-	 at com.consol.citrus.json.JsonPathUtils.evaluate(JsonPathUtils.java:94)
-	 at com.consol.citrus.validation.json.JsonPathMessageValidator.validateMessage(JsonPathMessageValidator.java:74)
-	 at com.consol.citrus.validation.json.JsonPathMessageValidator.validateMessage(JsonPathMessageValidator.java:46)
+	 at com.consol.citrus.validation.DefaultHeaderValidator.validateHeader(DefaultHeaderValidator.java:79)
+	 at com.consol.citrus.validation.DefaultMessageHeaderValidator.validateMessage(DefaultMessageHeaderValidator.java:101)
+	 at com.consol.citrus.validation.DefaultMessageHeaderValidator.validateMessage(DefaultMessageHeaderValidator.java:44)
 	 at com.consol.citrus.validation.AbstractMessageValidator.validateMessage(AbstractMessageValidator.java:46)
 	 at com.consol.citrus.actions.ReceiveMessageAction.validateMessage(ReceiveMessageAction.java:279)
 	 at com.consol.citrus.actions.ReceiveMessageAction.doExecute(ReceiveMessageAction.java:168)
@@ -142,8 +142,8 @@
 	 at com.consol.citrus.DefaultTestCase.executeAction(DefaultTestCase.java:136)
 	 at com.consol.citrus.DefaultTestCaseRunner.run(DefaultTestCaseRunner.java:125)
 	 at com.consol.citrus.TestActionRunner.$(TestActionRunner.java:35)
-	 at autotests.duckActionControllerTests.PropertiesTests.validateResponse(PropertiesTests.java:52)
-	 at autotests.duckActionControllerTests.PropertiesTests.properties1(PropertiesTests.java:23)
+	 at autotests.duckControllerTests.DeleteTests.validateResponse(DeleteTests.java:37)
+	 at autotests.duckControllerTests.DeleteTests.deleteDuckTest(DeleteTests.java:23)
 	 at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	 at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	 at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -198,21 +198,7 @@
 	 at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:122)
 	 at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:72)
 	 at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
-	 at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)</pre></div></td></tr><tr class="success" onmouseover="showTooltip('PropertiesTests.properties2Info', event);" onmouseout="hideTooltip();">
-    <th>PropertiesTests.properties2
-        <span class="tooltip" id="PropertiesTests.properties2Info">
-        <b><i>PropertiesTests.properties2</i></b><br/>
-        <b>Author:</b> <br/>
-        <b>Status:</b> DRAFT<br/>
-        <b>Creation Date:</b> <br/>
-        <b>Last updated by:</b> <br/>
-        <b>Last updated on:</b> <br/>
-        <b>Description:</b> <br/>
-        </span>
-    </th>
-    <td>SUCCESS</td>
-</tr>
-
+	 at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)</pre></div></td></tr>
                 </tbody>
             </table>
         </div>

@@ -11,39 +11,29 @@ import org.springframework.http.MediaType;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
 
-import static com.consol.citrus.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
 import static com.consol.citrus.http.actions.HttpActionBuilder.http;
+import static com.consol.citrus.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
 
-public class PropertiesTests extends TestNGCitrusSpringSupport {
-    @Test(description = "Проверка Properties с четным id")
+public class QuackTests extends TestNGCitrusSpringSupport {
+    @Test(description = "уточка с нечетным id")
     @CitrusTest
-    public void properties1(@Optional @CitrusResource TestCaseRunner runner){
-      duckProperties(runner,"2");
-      validateResponse( runner, jsonPath()
-              .expression("$.color", "yellow")
-              .expression("$.height", "@isNumber()@")
-              .expression("$.material", "wood")
-              .expression("$.sound", "quack")
-              .expression("$.wingsState", "ACTIVE")
-        );
-    }
-    @Test(description = "Проверка Properties с нечетным id")
-    @CitrusTest
-    public void properties2(@Optional @CitrusResource TestCaseRunner runner){
-        duckProperties(runner,"1");
+    public  void fly1(@Optional @CitrusResource TestCaseRunner runner) {
+        duckQuack(runner,"1");
         validateResponse( runner, jsonPath()
-                .expression("$.color", "yellow")
-                .expression("$.height", "@isNumber()@")
-                .expression("$.material", "rubber")
-                .expression("$.sound", "quack")
-                .expression("$.wingsState", "ACTIVE")
-        );
+                .expression("$.sound", "quack"));
     }
-    public void duckProperties(TestCaseRunner runner,String duckId){
+    @Test(description = "уточка с четным id")
+    @CitrusTest
+    public  void fly2(@Optional @CitrusResource TestCaseRunner runner) {
+        duckQuack(runner,"2");
+        validateResponse( runner, jsonPath()
+                .expression("$.sound", "quack"));
+    }
+    public void duckQuack(TestCaseRunner runner, String duckId){
         runner.$(http()
                 .client("http://localhost:2222/")
                 .send()
-                .get("/api/duck/action/properties")
+                .get("/api/duck/action/quack")
                 .queryParam("id", duckId));
     }
 
@@ -59,4 +49,3 @@ public class PropertiesTests extends TestNGCitrusSpringSupport {
     }
 
 }
-

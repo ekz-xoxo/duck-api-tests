@@ -1,4 +1,4 @@
-package autotests.duckActionControllerTests;
+package autotests.duckControllerTests;
 
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
@@ -14,36 +14,22 @@ import org.testng.annotations.Test;
 import static com.consol.citrus.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
 import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 
-public class PropertiesTests extends TestNGCitrusSpringSupport {
-    @Test(description = "Проверка Properties с четным id")
+public class DeleteTests extends TestNGCitrusSpringSupport {
+    @Test(description = "удаление утки")
     @CitrusTest
-    public void properties1(@Optional @CitrusResource TestCaseRunner runner){
-      duckProperties(runner,"2");
-      validateResponse( runner, jsonPath()
-              .expression("$.color", "yellow")
-              .expression("$.height", "@isNumber()@")
-              .expression("$.material", "wood")
-              .expression("$.sound", "quack")
-              .expression("$.wingsState", "ACTIVE")
+    public void deleteDuckTest(@Optional @CitrusResource TestCaseRunner runner) {
+        deleteDuck(runner, "1");
+
+        validateResponse(runner, jsonPath()
+                .expression("$.message", "Duck is deleted")
         );
     }
-    @Test(description = "Проверка Properties с нечетным id")
-    @CitrusTest
-    public void properties2(@Optional @CitrusResource TestCaseRunner runner){
-        duckProperties(runner,"1");
-        validateResponse( runner, jsonPath()
-                .expression("$.color", "yellow")
-                .expression("$.height", "@isNumber()@")
-                .expression("$.material", "rubber")
-                .expression("$.sound", "quack")
-                .expression("$.wingsState", "ACTIVE")
-        );
-    }
-    public void duckProperties(TestCaseRunner runner,String duckId){
+
+    public void deleteDuck(TestCaseRunner runner, String duckId) {
         runner.$(http()
                 .client("http://localhost:2222/")
                 .send()
-                .get("/api/duck/action/properties")
+                .delete("/api/duck/delete")
                 .queryParam("id", duckId));
     }
 
@@ -57,6 +43,4 @@ public class PropertiesTests extends TestNGCitrusSpringSupport {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .validate(body));
     }
-
 }
-

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="TestSuite" time="0.0" tests="1" errors="0" skipped="0" failures="1">
+<testsuite name="autotests.duckControllerTests.DeleteTests" time="0.0" tests="1" errors="0" skipped="0" failures="1">
     <testcase name="DeleteTests.deleteDuckTest" classname="autotests.duckControllerTests.DeleteTests" time="0.0">
       <failure type="com.consol.citrus.exceptions.ValidationException" message="Validation failed: Values not equal for header element &apos;citrus_http_reason_phrase&apos;, expected &apos;OK&apos; but was &apos;INTERNAL_SERVER_ERROR&apos;">
         <![CDATA[
