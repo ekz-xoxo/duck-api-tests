@@ -14,18 +14,20 @@ public class FlyTests extends FlyClient {
     @Test(description = "уточка с активными крыльями")
     @CitrusTest
     public  void FlyTest1(@Optional @CitrusResource TestCaseRunner runner) {
-        duckFly(runner,"1");
+        createDuck(runner, "yellow", 0.01, "rubber", "quack", "ACTIVE");
+        duckFly(runner,"${duckId}");
         validateResponse( runner, jsonPath()
                 .expression("$.message", "I am flying :)"));
     }
     @Test(description = "уточка с неактивными крыльями")
     @CitrusTest
     public  void FlyTest2(@Optional @CitrusResource TestCaseRunner runner) {
-        duckFly(runner,"2");
+        createDuck(runner, "yellow", 0.01, "rubber", "quack", "FIXED");
+        duckFly(runner,"${duckId}");
         validateResponse( runner, jsonPath()
                 .expression("$.message", "I can not fly :C"));
     }
-    @Test(description = "уточка с неопределенными крыльями")
+    @Test(description = "уточка с неопределенными крыльями(руками в БД)")
     @CitrusTest
     public  void FlyTest3(@Optional @CitrusResource TestCaseRunner runner) {
         duckFly(runner, "3");
