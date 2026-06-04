@@ -1,4 +1,4 @@
-package autotests.clients.duckActionControllerClients;
+package autotests.clients.duckControllerClients;
 
 import autotests.EndpointConfig;
 import com.consol.citrus.TestCaseRunner;
@@ -15,39 +15,9 @@ import static com.consol.citrus.dsl.MessageSupport.MessageBodySupport.fromBody;
 import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 
 @ContextConfiguration(classes = {EndpointConfig.class})
-public class SwimClient extends TestNGCitrusSpringSupport {
+public class DeleteClient extends TestNGCitrusSpringSupport {
     @Autowired
     protected HttpClient duckService;
-
-    public void duckSwim(TestCaseRunner runner, String duckId){
-        runner.$(http()
-                .client(duckService)
-                .send()
-                .get("/api/duck/action/swim")
-                .queryParam("id", duckId));
-    }
-
-    public void validateResponse(TestCaseRunner runner, JsonPathMessageValidationContext.Builder body){
-        runner.$(http()
-                .client(duckService)
-                .receive()
-                .response(HttpStatus.OK)
-                .message()
-                .type(MessageType.JSON)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .validate(body));
-    }
-
-    public void validateBadResponse(TestCaseRunner runner, JsonPathMessageValidationContext.Builder body){
-        runner.$(http()
-                .client(duckService)
-                .receive()
-                .response(HttpStatus.NOT_FOUND)
-                .message()
-                .type(MessageType.JSON)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .validate(body));
-    }
 
     public void createDuck(TestCaseRunner runner, String color, double height,
                            String material, String sound, String wingsState) {
@@ -74,6 +44,22 @@ public class SwimClient extends TestNGCitrusSpringSupport {
                 .extract(fromBody().expression("$.id", "duckId")));
     }
 
+    public void deleteDuck(TestCaseRunner runner, String duckId) {
+        runner.$(http()
+                .client(duckService)
+                .send()
+                .delete("/api/duck/delete")
+                .queryParam("id", duckId));
+    }
+
+    public void validateResponse(TestCaseRunner runner, JsonPathMessageValidationContext.Builder body){
+        runner.$(http()
+                .client(duckService)
+                .receive()
+                .response(HttpStatus.OK)
+                .message()
+                .type(MessageType.JSON)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .validate(body));
+    }
 }
-
-

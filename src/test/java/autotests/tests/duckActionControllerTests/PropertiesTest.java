@@ -9,7 +9,7 @@ import autotests.clients.duckActionControllerClients.PropertiesClient;
 
 import static com.consol.citrus.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
 
-public class PropertiesTests extends PropertiesClient {
+public class PropertiesTest extends PropertiesClient {
     @Test(description = "Проверка Properties с четным id")
     @CitrusTest
     public void propertiesTest1(@Optional @CitrusResource TestCaseRunner runner){

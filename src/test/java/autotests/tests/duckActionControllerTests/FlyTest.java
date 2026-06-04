@@ -9,7 +9,7 @@ import autotests.clients.duckActionControllerClients.FlyClient;
 
 import static com.consol.citrus.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
 
-public class FlyTests extends FlyClient {
+public class FlyTest extends FlyClient {
 
     @Test(description = "уточка с активными крыльями")
     @CitrusTest
