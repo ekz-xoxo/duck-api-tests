@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="autotests.tests.duckActionControllerTests.FlyTests" time="0.0" tests="3" errors="0" skipped="0" failures="0">
+    <testcase name="FlyTests.FlyTest1" classname="autotests.tests.duckActionControllerTests.FlyTests" time="0.0"/>
+    <testcase name="FlyTests.FlyTest2" classname="autotests.tests.duckActionControllerTests.FlyTests" time="0.0"/>
+    <testcase name="FlyTests.FlyTest3" classname="autotests.tests.duckActionControllerTests.FlyTests" time="0.0"/>
+</testsuite>

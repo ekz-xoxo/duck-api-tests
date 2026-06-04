@@ -1,45 +1,34 @@
-package autotests.duckActionControllerTests;
+package autotests.clients.duckActionControllerClients;
 
+import autotests.EndpointConfig;
 import com.consol.citrus.TestCaseRunner;
-import com.consol.citrus.annotations.CitrusResource;
-import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 import static com.consol.citrus.http.actions.HttpActionBuilder.http;
-import static com.consol.citrus.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
 
-public class SwimTests extends TestNGCitrusSpringSupport {
-    @Test(description = "уточка с активными крыльями")
-    @CitrusTest
-    public  void swim1(@Optional @CitrusResource TestCaseRunner runner) {
-        duckFly(runner,"2");
-        validateResponse( runner, jsonPath()
-                .expression("$.message", "I’m swimming"));
-    }
-    @Test(description = "уточка с неcуществующим id")
-    @CitrusTest
-    public  void swim2(@Optional @CitrusResource TestCaseRunner runner) {
-        duckFly(runner,"3");
-        validateBadResponse( runner, jsonPath()
-                .expression("$.message", "@notEmpty()@"));
-    }
+@ContextConfiguration(classes = {EndpointConfig.class})
+public class FlyClient extends TestNGCitrusSpringSupport {
+    @Autowired
+    protected HttpClient duckService;
+
     public void duckFly(TestCaseRunner runner, String duckId){
         runner.$(http()
-                .client("http://localhost:2222/")
+                .client(duckService)
                 .send()
-                .get("/api/duck/action/swim")
+                .get("/api/duck/action/fly")
                 .queryParam("id", duckId));
     }
 
     public void validateResponse(TestCaseRunner runner, JsonPathMessageValidationContext.Builder body){
         runner.$(http()
-                .client("http://localhost:2222/")
+                .client(duckService)
                 .receive()
                 .response(HttpStatus.OK)
                 .message()
@@ -50,12 +39,15 @@ public class SwimTests extends TestNGCitrusSpringSupport {
 
     public void validateBadResponse(TestCaseRunner runner, JsonPathMessageValidationContext.Builder body){
         runner.$(http()
-                .client("http://localhost:2222/")
+                .client(duckService)
                 .receive()
-                .response(HttpStatus.BAD_REQUEST)
+                .response(HttpStatus.INTERNAL_SERVER_ERROR)
                 .message()
                 .type(MessageType.JSON)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .validate(body));
     }
+
 }
+
+
