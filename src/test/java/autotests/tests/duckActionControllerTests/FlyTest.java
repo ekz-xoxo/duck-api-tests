@@ -33,7 +33,7 @@ public class FlyTest extends FlyClient {
         validateResponse( runner, jsonPath()
                 .expression("$.message", "I can not fly :C"));
     }
-    @Test(description = "уточка с неопределенными крыльями(руками в БД)")
+    @Test(description = "уточка с неопределенными крыльями")
     @CitrusTest
     public  void FlyTest3(@Optional @CitrusResource TestCaseRunner runner) {
         createDuck(runner, "yellow", 0.01, "rubber", "quack", "UNDEFINED");

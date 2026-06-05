@@ -34,14 +34,19 @@ public class UpdateClient extends TestNGCitrusSpringSupport {
                         "  \"sound\": \"" + sound + "\",\n" +
                         "  \"wingsState\": \"" + wingsState + "\"\n" +
                         "}"));
+    }
 
+    public void validateCreateResponse(TestCaseRunner runner,
+                                       JsonPathMessageValidationContext.Builder body) {
         runner.$(http()
                 .client(duckService)
                 .receive()
                 .response(HttpStatus.OK)
                 .message()
                 .type(MessageType.JSON)
-                .extract(fromBody().expression("$.id", "duckId")));
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .extract(fromBody().expression("$.id", "duckId"))
+                .validate(body));
     }
 
     public void updateDuck(TestCaseRunner runner, String duckId, String color, double height,
@@ -50,23 +55,19 @@ public class UpdateClient extends TestNGCitrusSpringSupport {
                 .client(duckService)
                 .send()
                 .put("/api/duck/update")
-                .message()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body("{\n" +
-                        "  \"id\": " + duckId + ",\n" +
-                        "  \"color\": \"" + color + "\",\n" +
-                        "  \"height\": " + height + ",\n" +
-                        "  \"material\": \"" + material + "\",\n" +
-                        "  \"sound\": \"" + sound + "\",\n" +
-                        "  \"wingsState\": \"" + wingsState + "\"\n" +
-                        "}"));
+                .queryParam("id", duckId)
+                .queryParam("color", color)
+                .queryParam("height", String.valueOf(height))
+                .queryParam("material", material)
+                .queryParam("sound", sound)
+                .queryParam("wingsState", wingsState));
     }
 
     public void validateResponse(TestCaseRunner runner, JsonPathMessageValidationContext.Builder body){
         runner.$(http()
                 .client(duckService)
                 .receive()
-                .response(HttpStatus.BAD_REQUEST)
+                .response(HttpStatus.OK)
                 .message()
                 .type(MessageType.JSON)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
