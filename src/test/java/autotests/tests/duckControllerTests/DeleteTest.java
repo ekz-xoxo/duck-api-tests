@@ -14,6 +14,8 @@ public class DeleteTest extends DeleteClient {
     @CitrusTest
     public void deleteDuckTest(@Optional @CitrusResource TestCaseRunner runner) {
         createDuck(runner, "yellow", 0.01, "rubber", "quack", "ACTIVE");
+        validateCreateResponse(runner, jsonPath()
+                .expression("$.id", "@isNumber()@"));
         deleteDuck(runner, "${duckId}");
 
         validateResponse(runner, jsonPath()

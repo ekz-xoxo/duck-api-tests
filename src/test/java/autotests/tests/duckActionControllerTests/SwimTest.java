@@ -13,16 +13,19 @@ public class SwimTest extends SwimClient {
     @CitrusTest
     public  void swimTest1(@Optional @CitrusResource TestCaseRunner runner) {
         createDuck(runner, "yellow", 0.01, "rubber", "quack", "ACTIVE");
+        validateCreateResponse(runner, jsonPath()
+                        .expression("$.id", "@isNumber()@"));
         duckSwim(runner,"${duckId}");
-        validateBadResponse( runner, jsonPath()
+        validateResponse( runner, jsonPath()
                 .expression("$.message", "Paws are not found (((("));
     }
+
     @Test(description = "уточка с неcуществующим id")
     @CitrusTest
     public  void swimTest2(@Optional @CitrusResource TestCaseRunner runner) {
-        duckSwim(runner,"9999");
-        validateBadResponse( runner, jsonPath()
-                .expression("$.message", "@notEmpty()@"));
+        duckSwim(runner,"999");
+        validateResponse( runner, jsonPath()
+                .expression("$.message", "Paws are not found (((("));
     }
 
 }

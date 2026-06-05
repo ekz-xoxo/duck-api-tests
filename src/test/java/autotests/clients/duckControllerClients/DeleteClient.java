@@ -34,14 +34,19 @@ public class DeleteClient extends TestNGCitrusSpringSupport {
                         "  \"sound\": \"" + sound + "\",\n" +
                         "  \"wingsState\": \"" + wingsState + "\"\n" +
                         "}"));
+    }
 
+    public void validateCreateResponse(TestCaseRunner runner,
+                                       JsonPathMessageValidationContext.Builder body) {
         runner.$(http()
                 .client(duckService)
                 .receive()
                 .response(HttpStatus.OK)
                 .message()
                 .type(MessageType.JSON)
-                .extract(fromBody().expression("$.id", "duckId")));
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .extract(fromBody().expression("$.id", "duckId"))
+                .validate(body));
     }
 
     public void deleteDuck(TestCaseRunner runner, String duckId) {
