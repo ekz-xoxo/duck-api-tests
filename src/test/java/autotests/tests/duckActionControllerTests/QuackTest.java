@@ -13,16 +13,16 @@ public class QuackTest extends QuackClient {
     @Test(description = "уточка с нечетным id")
     @CitrusTest
     public void quackTest1(@Optional @CitrusResource TestCaseRunner runner) {
-        duckQuack(runner,"1");
-        validateBadResponse(runner, jsonPath()
-                .expression("$.message", "@notEmpty()@"));
+        duckQuack(runner,"1", "1","1");
+        validateResponse(runner, jsonPath()
+                .expression("$.sound", "quack"));
     }
     @Test(description = "уточка с четным id")
     @CitrusTest
     public void quackTest2(@Optional @CitrusResource TestCaseRunner runner) {
-        duckQuack(runner,"2");
-        validateBadResponse(runner, jsonPath()
-                .expression("$.message", "@notEmpty()@"));
+        duckQuack(runner,"2","1","1");
+        validateResponse(runner, jsonPath()
+                .expression("$.sound", "moo"));
     }
 
 

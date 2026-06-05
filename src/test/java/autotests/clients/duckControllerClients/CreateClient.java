@@ -36,7 +36,8 @@ public class CreateClient extends TestNGCitrusSpringSupport {
                         "}"));
     }
 
-    public void validateResponse(TestCaseRunner runner, JsonPathMessageValidationContext.Builder body) {
+    public void validateCreateResponse(TestCaseRunner runner,
+                                       JsonPathMessageValidationContext.Builder body) {
         runner.$(http()
                 .client(duckService)
                 .receive()
@@ -44,8 +45,7 @@ public class CreateClient extends TestNGCitrusSpringSupport {
                 .message()
                 .type(MessageType.JSON)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .extract(fromBody().expression("$.id", "duckId"))
                 .validate(body));
-
-
     }
 }

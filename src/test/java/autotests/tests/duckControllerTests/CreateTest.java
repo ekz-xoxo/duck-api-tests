@@ -13,22 +13,25 @@ public class CreateTest extends CreateClient {
     @Test(description = "cоздание утки из rubber")
     @CitrusTest
     public void createTest1(@Optional @CitrusResource TestCaseRunner runner) {
-        createDuck(runner, "yellow", 0.01, "rubber", "quack", "ACTIVE");
+        createDuck(runner, "yellow", 0.01, "wood", "quack", "ACTIVE");
 
-        validateResponse(runner, jsonPath()
+        validateCreateResponse(runner, jsonPath()
+                .expression("$.id", "@isNumber()@")
                 .expression("$.color", "yellow")
                 .expression("$.height", "0.01")
-                .expression("$.material", "rubber")
+                .expression("$.material", "wood")
                 .expression("$.sound", "quack")
                 .expression("$.wingsState", "ACTIVE")
         );
+
     }
     @Test(description = "создание утки из wood")
     @CitrusTest
     public void createTest2(@Optional @CitrusResource TestCaseRunner runner) {
         createDuck(runner, "yellow", 0.01, "wood", "quack", "ACTIVE");
 
-        validateResponse(runner, jsonPath()
+        validateCreateResponse(runner, jsonPath()
+                .expression("$.id", "@isNumber()@")
                 .expression("$.color", "yellow")
                 .expression("$.height", "0.01")
                 .expression("$.material", "wood")

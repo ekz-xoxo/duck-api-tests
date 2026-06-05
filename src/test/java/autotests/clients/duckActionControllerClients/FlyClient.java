@@ -34,14 +34,19 @@ public class FlyClient extends TestNGCitrusSpringSupport {
                         "  \"sound\": \"" + sound + "\",\n" +
                         "  \"wingsState\": \"" + wingsState + "\"\n" +
                         "}"));
+    }
 
+    public void validateCreateResponse(TestCaseRunner runner,
+                                       JsonPathMessageValidationContext.Builder body) {
         runner.$(http()
                 .client(duckService)
                 .receive()
                 .response(HttpStatus.OK)
                 .message()
                 .type(MessageType.JSON)
-                .extract(fromBody().expression("$.id", "duckId")));
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .extract(fromBody().expression("$.id", "duckId"))
+                .validate(body));
     }
 
     public void duckFly(TestCaseRunner runner, String duckId){
@@ -63,16 +68,6 @@ public class FlyClient extends TestNGCitrusSpringSupport {
                 .validate(body));
     }
 
-    public void validateBadResponse(TestCaseRunner runner, JsonPathMessageValidationContext.Builder body){
-        runner.$(http()
-                .client(duckService)
-                .receive()
-                .response(HttpStatus.INTERNAL_SERVER_ERROR)
-                .message()
-                .type(MessageType.JSON)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .validate(body));
-    }
 
 }
 

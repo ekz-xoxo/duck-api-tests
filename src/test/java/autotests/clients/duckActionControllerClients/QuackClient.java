@@ -18,19 +18,21 @@ public class QuackClient extends TestNGCitrusSpringSupport {
     @Autowired
     protected HttpClient duckService;
 
-    public void duckQuack(TestCaseRunner runner, String duckId){
+    public void duckQuack(TestCaseRunner runner, String duckId, String repetitionCount, String soundCount ){
         runner.$(http()
                 .client(duckService)
                 .send()
                 .get("/api/duck/action/quack")
-                .queryParam("id", duckId));
+                .queryParam("id", duckId)
+                .queryParam("repetitionCount", repetitionCount)
+                .queryParam("soundCount", soundCount));
     }
 
-    public void validateBadResponse(TestCaseRunner runner, JsonPathMessageValidationContext.Builder body){
+    public void validateResponse(TestCaseRunner runner, JsonPathMessageValidationContext.Builder body){
         runner.$(http()
                 .client(duckService)
                 .receive()
-                .response(HttpStatus.BAD_REQUEST)
+                .response(HttpStatus.OK)
                 .message()
                 .type(MessageType.JSON)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

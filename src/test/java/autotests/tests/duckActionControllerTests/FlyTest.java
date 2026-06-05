@@ -15,6 +15,9 @@ public class FlyTest extends FlyClient {
     @CitrusTest
     public  void FlyTest1(@Optional @CitrusResource TestCaseRunner runner) {
         createDuck(runner, "yellow", 0.01, "rubber", "quack", "ACTIVE");
+        validateCreateResponse(runner, jsonPath()
+                .expression("$.id", "@isNumber()@")
+                .expression("$.wingsState", "ACTIVE"));
         duckFly(runner,"${duckId}");
         validateResponse( runner, jsonPath()
                 .expression("$.message", "I am flying :)"));
@@ -23,6 +26,9 @@ public class FlyTest extends FlyClient {
     @CitrusTest
     public  void FlyTest2(@Optional @CitrusResource TestCaseRunner runner) {
         createDuck(runner, "yellow", 0.01, "rubber", "quack", "FIXED");
+        validateCreateResponse(runner, jsonPath()
+                .expression("$.id", "@isNumber()@")
+                .expression("$.wingsState", "FIXED"));
         duckFly(runner,"${duckId}");
         validateResponse( runner, jsonPath()
                 .expression("$.message", "I can not fly :C"));
@@ -30,9 +36,13 @@ public class FlyTest extends FlyClient {
     @Test(description = "уточка с неопределенными крыльями(руками в БД)")
     @CitrusTest
     public  void FlyTest3(@Optional @CitrusResource TestCaseRunner runner) {
-        duckFly(runner, "3");
-        validateBadResponse(runner, jsonPath()
-                .expression("$.message", "@notEmpty()@"));
+        createDuck(runner, "yellow", 0.01, "rubber", "quack", "UNDEFINED");
+        validateCreateResponse(runner, jsonPath()
+                .expression("$.id", "@isNumber()@")
+                .expression("$.wingsState", "UNDEFINED"));
+        duckFly(runner, "${duckId}");
+        validateResponse(runner, jsonPath()
+                .expression("$.message", "Wings are not detected :("));
     }
 
 }
