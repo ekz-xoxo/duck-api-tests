@@ -11,29 +11,34 @@ import org.springframework.http.MediaType;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
 
-import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 import static com.consol.citrus.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
+import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 
-public class SwimTests extends TestNGCitrusSpringSupport {
-    @Test(description = "уточка с активными крыльями")
+public class PropertiesTest extends TestNGCitrusSpringSupport {
+    @Test(description = "Проверка Properties с четным id")
     @CitrusTest
-    public  void swim1(@Optional @CitrusResource TestCaseRunner runner) {
-        duckFly(runner,"2");
+    public void propertiesTest1(@Optional @CitrusResource TestCaseRunner runner){
+        duckProperties(runner,"2");
         validateResponse( runner, jsonPath()
-                .expression("$.message", "I’m swimming"));
+                .expression("$", "{}"));
     }
-    @Test(description = "уточка с неcуществующим id")
+    @Test(description = "Проверка Properties с нечетным id")
     @CitrusTest
-    public  void swim2(@Optional @CitrusResource TestCaseRunner runner) {
-        duckFly(runner,"3");
-        validateBadResponse( runner, jsonPath()
-                .expression("$.message", "@notEmpty()@"));
+    public void propertiesTest2(@Optional @CitrusResource TestCaseRunner runner){
+        duckProperties(runner,"1");
+        validateResponse( runner, jsonPath()
+                .expression("$.color", "yellow")
+                .expression("$.height", "@isNumber()@")
+                .expression("$.material", "rubber")
+                .expression("$.sound", "quack")
+                .expression("$.wingsState", "ACTIVE")
+        );
     }
-    public void duckFly(TestCaseRunner runner, String duckId){
+    public void duckProperties(TestCaseRunner runner,String duckId){
         runner.$(http()
                 .client("http://localhost:2222/")
                 .send()
-                .get("/api/duck/action/swim")
+                .get("/api/duck/action/properties")
                 .queryParam("id", duckId));
     }
 
@@ -48,14 +53,5 @@ public class SwimTests extends TestNGCitrusSpringSupport {
                 .validate(body));
     }
 
-    public void validateBadResponse(TestCaseRunner runner, JsonPathMessageValidationContext.Builder body){
-        runner.$(http()
-                .client("http://localhost:2222/")
-                .receive()
-                .response(HttpStatus.BAD_REQUEST)
-                .message()
-                .type(MessageType.JSON)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .validate(body));
-    }
 }
+

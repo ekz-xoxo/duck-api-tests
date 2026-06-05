@@ -1,4 +1,4 @@
-package autotests.duckControllerTests;
+package autotests.duckActionControllerTests;
 
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
@@ -11,35 +11,49 @@ import org.springframework.http.MediaType;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
 
-import static com.consol.citrus.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
+import static com.consol.citrus.dsl.MessageSupport.MessageBodySupport.fromBody;
 import static com.consol.citrus.http.actions.HttpActionBuilder.http;
+import static com.consol.citrus.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
 
-public class CreateTests extends TestNGCitrusSpringSupport {
-    @Test(description = "cоздание утки из rubber")
+
+public class SwimTest extends TestNGCitrusSpringSupport {
+    @Test(description = "уточка с существующим id")
     @CitrusTest
-    public void createTest1(@Optional @CitrusResource TestCaseRunner runner) {
+    public void swimTest1(@Optional @CitrusResource TestCaseRunner runner) {
         createDuck(runner, "yellow", 0.01, "rubber", "quack", "ACTIVE");
-
+        validateCreateResponse(runner, jsonPath()
+                .expression("$.id", "@isNumber()@"));
+        duckSwim(runner, "${duckId}");
         validateResponse(runner, jsonPath()
-                .expression("$.color", "yellow")
-                .expression("$.height", "0.01")
-                .expression("$.material", "rubber")
-                .expression("$.sound", "quack")
-                .expression("$.wingsState", "ACTIVE")
-        );
+                .expression("$.message", "Paws are not found (((("));
     }
-    @Test(description = "создание утки из wood")
-    @CitrusTest
-    public void createTest2(@Optional @CitrusResource TestCaseRunner runner) {
-        createDuck(runner, "yellow", 0.01, "rubber", "quack", "ACTIVE");
 
+    @Test(description = "уточка с неcуществующим id")
+    @CitrusTest
+    public void swimTest2(@Optional @CitrusResource TestCaseRunner runner) {
+        duckSwim(runner, "999");
         validateResponse(runner, jsonPath()
-                .expression("$.color", "yellow")
-                .expression("$.height", "0.01")
-                .expression("$.material", "wood")
-                .expression("$.sound", "quack")
-                .expression("$.wingsState", "ACTIVE")
-        );
+                .expression("$.message", "Paws are not found (((("));
+    }
+
+
+    public void duckSwim(TestCaseRunner runner, String duckId) {
+        runner.$(http()
+                .client("http://localhost:2222/")
+                .send()
+                .get("/api/duck/action/swim")
+                .queryParam("id", duckId));
+    }
+
+    public void validateResponse(TestCaseRunner runner, JsonPathMessageValidationContext.Builder body) {
+        runner.$(http()
+                .client("http://localhost:2222/")
+                .receive()
+                .response(HttpStatus.NOT_FOUND)
+                .message()
+                .type(MessageType.JSON)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .validate(body));
     }
 
     public void createDuck(TestCaseRunner runner, String color, double height,
@@ -59,7 +73,8 @@ public class CreateTests extends TestNGCitrusSpringSupport {
                         "}"));
     }
 
-    public void validateResponse(TestCaseRunner runner, JsonPathMessageValidationContext.Builder body){
+    public void validateCreateResponse(TestCaseRunner runner,
+                                       JsonPathMessageValidationContext.Builder body) {
         runner.$(http()
                 .client("http://localhost:2222/")
                 .receive()
@@ -67,6 +82,8 @@ public class CreateTests extends TestNGCitrusSpringSupport {
                 .message()
                 .type(MessageType.JSON)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .extract(fromBody().expression("$.id", "duckId"))
                 .validate(body));
     }
+
 }

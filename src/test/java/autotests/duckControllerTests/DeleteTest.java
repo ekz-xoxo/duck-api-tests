@@ -11,39 +11,32 @@ import org.springframework.http.MediaType;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
 
-import static com.consol.citrus.http.actions.HttpActionBuilder.http;
+import static com.consol.citrus.dsl.MessageSupport.MessageBodySupport.fromBody;
 import static com.consol.citrus.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
+import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 
-public class UpdateTests extends TestNGCitrusSpringSupport {
-    @Test(description = "обновление цвета и высоты утки")
+public class DeleteTest extends TestNGCitrusSpringSupport {
+    @Test(description = "удаление утки")
     @CitrusTest
-    public void updateTest1(@Optional @CitrusResource TestCaseRunner runner) {
-        updateDuck(runner, "1","pink", 0.05, "rubber", "quack", "ACTIVE");
+    public void deleteDuckTest(@Optional @CitrusResource TestCaseRunner runner) {
+        createDuck(runner, "yellow", 0.01, "rubber", "quack", "ACTIVE");
+        validateCreateResponse(runner, jsonPath()
+                .expression("$.id", "@isNumber()@"));
+        deleteDuck(runner, "${duckId}");
 
         validateResponse(runner, jsonPath()
-                .expression("$.message", "Duck with id = 1 is updated")
+                .expression("$.message", "Duck is deleted")
         );
-
     }
-    @Test(description = "обновление звука и цвета утки")
-    @CitrusTest
-    public void updateTest2(@Optional @CitrusResource TestCaseRunner runner) {
-        updateDuck(runner, "2","red", 0.01, "rubber", "quack-quack", "ACTIVE");
 
-        validateResponse(runner, jsonPath()
-                .expression("$.message", "Duck with id = 2 is updated")
-        );
-
-    }
-    public void updateDuck(TestCaseRunner runner, String duckId, String color, double height,
+    public void createDuck(TestCaseRunner runner, String color, double height,
                            String material, String sound, String wingsState) {
         runner.$(http()
                 .client("http://localhost:2222/")
                 .send()
-                .post("/api/duck/update")
+                .post("/api/duck/create")
                 .message()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .queryParam("id", duckId)
                 .body("{\n" +
                         "  \"color\": \"" + color + "\",\n" +
                         "  \"height\": " + height + ",\n" +
@@ -51,6 +44,27 @@ public class UpdateTests extends TestNGCitrusSpringSupport {
                         "  \"sound\": \"" + sound + "\",\n" +
                         "  \"wingsState\": \"" + wingsState + "\"\n" +
                         "}"));
+    }
+
+    public void validateCreateResponse(TestCaseRunner runner,
+                                       JsonPathMessageValidationContext.Builder body) {
+        runner.$(http()
+                .client("http://localhost:2222/")
+                .receive()
+                .response(HttpStatus.OK)
+                .message()
+                .type(MessageType.JSON)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .extract(fromBody().expression("$.id", "duckId"))
+                .validate(body));
+    }
+
+    public void deleteDuck(TestCaseRunner runner, String duckId) {
+        runner.$(http()
+                .client("http://localhost:2222/")
+                .send()
+                .delete("/api/duck/delete")
+                .queryParam("id", duckId));
     }
 
     public void validateResponse(TestCaseRunner runner, JsonPathMessageValidationContext.Builder body){

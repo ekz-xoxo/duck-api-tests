@@ -1,4 +1,4 @@
-package autotests.duckControllerTests;
+package autotests.duckActionControllerTests;
 
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
@@ -11,26 +11,32 @@ import org.springframework.http.MediaType;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
 
-import static com.consol.citrus.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
 import static com.consol.citrus.http.actions.HttpActionBuilder.http;
+import static com.consol.citrus.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
 
-public class DeleteTests extends TestNGCitrusSpringSupport {
-    @Test(description = "удаление утки")
+public class QuackTest extends TestNGCitrusSpringSupport {
+    @Test(description = "уточка с нечетным id")
     @CitrusTest
-    public void deleteDuckTest(@Optional @CitrusResource TestCaseRunner runner) {
-        deleteDuck(runner, "1");
-
+    public void quackTest1(@Optional @CitrusResource TestCaseRunner runner) {
+        duckQuack(runner,"1", "1","1");
         validateResponse(runner, jsonPath()
-                .expression("$.message", "Duck is deleted")
-        );
+                .expression("$.sound", "quack"));
     }
-
-    public void deleteDuck(TestCaseRunner runner, String duckId) {
+    @Test(description = "уточка с четным id")
+    @CitrusTest
+    public void quackTest2(@Optional @CitrusResource TestCaseRunner runner) {
+        duckQuack(runner,"2","1","1");
+        validateResponse(runner, jsonPath()
+                .expression("$.sound", "moo"));
+    }
+    public void duckQuack(TestCaseRunner runner, String duckId, String repetitionCount, String soundCount ){
         runner.$(http()
                 .client("http://localhost:2222/")
                 .send()
-                .delete("/api/duck/delete")
-                .queryParam("id", duckId));
+                .get("/api/duck/action/quack")
+                .queryParam("id", duckId)
+                .queryParam("repetitionCount", repetitionCount)
+                .queryParam("soundCount", soundCount));
     }
 
     public void validateResponse(TestCaseRunner runner, JsonPathMessageValidationContext.Builder body){
@@ -43,4 +49,5 @@ public class DeleteTests extends TestNGCitrusSpringSupport {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .validate(body));
     }
+
 }
