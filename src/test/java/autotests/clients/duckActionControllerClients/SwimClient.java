@@ -29,35 +29,6 @@ public class SwimClient extends DuckClient {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .validate(body));
     }
-    public void createDuck(TestCaseRunner runner, String color, double height,
-                           String material, String sound, String wingsState) {
-        runner.$(http()
-                .client(duckService)
-                .send()
-                .post("/api/duck/create")
-                .message()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body("{\n" +
-                        "  \"color\": \"" + color + "\",\n" +
-                        "  \"height\": " + height + ",\n" +
-                        "  \"material\": \"" + material + "\",\n" +
-                        "  \"sound\": \"" + sound + "\",\n" +
-                        "  \"wingsState\": \"" + wingsState + "\"\n" +
-                        "}"));
-    }
-
-    public void validateCreateResponse(TestCaseRunner runner,
-                                       JsonPathMessageValidationContext.Builder body) {
-        runner.$(http()
-                .client(duckService)
-                .receive()
-                .response(HttpStatus.OK)
-                .message()
-                .type(MessageType.JSON)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .extract(fromBody().expression("$.id", "duckId"))
-                .validate(body));
-    }
 
 }
 
