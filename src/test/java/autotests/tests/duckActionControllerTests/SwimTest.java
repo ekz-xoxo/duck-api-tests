@@ -16,7 +16,7 @@ public class SwimTest extends SwimClient {
         validateCreateResponse(runner, jsonPath()
                         .expression("$.id", "@isNumber()@"));
         duckSwim(runner,"${duckId}");
-        validateResponse( runner, jsonPath()
+        validateBadResponse( runner, jsonPath()
                 .expression("$.message", "Paws are not found (((("));
     }
 
@@ -24,7 +24,7 @@ public class SwimTest extends SwimClient {
     @CitrusTest
     public  void swimTest2(@Optional @CitrusResource TestCaseRunner runner) {
         duckSwim(runner,"999");
-        validateResponse( runner, jsonPath()
+        validateBadResponse( runner, jsonPath()
                 .expression("$.message", "Paws are not found (((("));
     }
 

@@ -1,34 +1,25 @@
-package autotests.clients.duckActionControllerClients;
+package autotests.clients;
 
-import autotests.clients.DuckClient;
+import autotests.EndpointConfig;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
+import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 
 import static com.consol.citrus.dsl.MessageSupport.MessageBodySupport.fromBody;
 import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 
-public class SwimClient extends DuckClient {
-    public void duckSwim(TestCaseRunner runner, String duckId){
-        runner.$(http()
-                .client(duckService)
-                .send()
-                .get("/api/duck/action/swim")
-                .queryParam("id", duckId));
-    }
+@ContextConfiguration(classes = {EndpointConfig.class})
+public class DuckClient extends TestNGCitrusSpringSupport {
 
-    public void validateResponse(TestCaseRunner runner, JsonPathMessageValidationContext.Builder body){
-        runner.$(http()
-                .client(duckService)
-                .receive()
-                .response(HttpStatus.NOT_FOUND)
-                .message()
-                .type(MessageType.JSON)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .validate(body));
-    }
+    @Autowired
+    protected HttpClient duckService;
+
     public void createDuck(TestCaseRunner runner, String color, double height,
                            String material, String sound, String wingsState) {
         runner.$(http()
@@ -59,6 +50,24 @@ public class SwimClient extends DuckClient {
                 .validate(body));
     }
 
+    public void validateResponse(TestCaseRunner runner, JsonPathMessageValidationContext.Builder body){
+        runner.$(http()
+                .client(duckService)
+                .receive()
+                .response(HttpStatus.OK)
+                .message()
+                .type(MessageType.JSON)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .validate(body));
+    }
+    public void validateBadResponse(TestCaseRunner runner, JsonPathMessageValidationContext.Builder body){
+        runner.$(http()
+                .client(duckService)
+                .receive()
+                .response(HttpStatus.NOT_FOUND)
+                .message()
+                .type(MessageType.JSON)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .validate(body));
+    }
 }
-
-

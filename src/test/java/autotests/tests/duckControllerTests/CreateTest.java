@@ -1,5 +1,6 @@
 package autotests.tests.duckControllerTests;
 
+import autotests.clients.DuckClient;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
@@ -9,7 +10,7 @@ import autotests.clients.duckControllerClients.CreateClient;
 
 import static com.consol.citrus.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
 
-public class CreateTest extends CreateClient {
+public class CreateTest extends DuckClient {
     @Test(description = "cоздание утки из rubber")
     @CitrusTest
     public void createTest1(@Optional @CitrusResource TestCaseRunner runner) {
