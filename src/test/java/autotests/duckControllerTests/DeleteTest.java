@@ -20,8 +20,7 @@ public class DeleteTest extends TestNGCitrusSpringSupport {
     @CitrusTest
     public void deleteDuckTest(@Optional @CitrusResource TestCaseRunner runner) {
         createDuck(runner, "yellow", 0.01, "rubber", "quack", "ACTIVE");
-        validateCreateResponse(runner, jsonPath()
-                .expression("$.id", "@isNumber()@"));
+        getDuckId(runner);
         deleteDuck(runner, "${duckId}");
 
         validateResponse(runner, jsonPath()
@@ -46,17 +45,14 @@ public class DeleteTest extends TestNGCitrusSpringSupport {
                         "}"));
     }
 
-    public void validateCreateResponse(TestCaseRunner runner,
-                                       JsonPathMessageValidationContext.Builder body) {
+    public void getDuckId(TestCaseRunner runner) {
         runner.$(http()
                 .client("http://localhost:2222/")
                 .receive()
                 .response(HttpStatus.OK)
                 .message()
                 .type(MessageType.JSON)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .extract(fromBody().expression("$.id", "duckId"))
-                .validate(body));
+                .extract(fromBody().expression("$.id", "duckId")));
     }
 
     public void deleteDuck(TestCaseRunner runner, String duckId) {

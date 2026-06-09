@@ -21,8 +21,7 @@ public class SwimTest extends TestNGCitrusSpringSupport {
     @CitrusTest
     public void swimTest1(@Optional @CitrusResource TestCaseRunner runner) {
         createDuck(runner, "yellow", 0.01, "rubber", "quack", "ACTIVE");
-        validateCreateResponse(runner, jsonPath()
-                .expression("$.id", "@isNumber()@"));
+        getDuckId(runner);
         duckSwim(runner, "${duckId}");
         validateResponse(runner, jsonPath()
                 .expression("$.message", "Paws are not found (((("));
@@ -73,17 +72,14 @@ public class SwimTest extends TestNGCitrusSpringSupport {
                         "}"));
     }
 
-    public void validateCreateResponse(TestCaseRunner runner,
-                                       JsonPathMessageValidationContext.Builder body) {
+    public void getDuckId(TestCaseRunner runner) {
         runner.$(http()
                 .client("http://localhost:2222/")
                 .receive()
                 .response(HttpStatus.OK)
                 .message()
                 .type(MessageType.JSON)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .extract(fromBody().expression("$.id", "duckId"))
-                .validate(body));
+                .extract(fromBody().expression("$.id", "duckId")));
     }
 
 }

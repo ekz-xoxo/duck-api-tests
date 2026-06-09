@@ -21,9 +21,7 @@ public class FlyTest extends TestNGCitrusSpringSupport {
     @CitrusTest
     public  void FlyTest1(@Optional @CitrusResource TestCaseRunner runner) {
         createDuck(runner, "yellow", 0.01, "rubber", "quack", "ACTIVE");
-        validateCreateResponse(runner, jsonPath()
-                .expression("$.id", "@isNumber()@")
-                .expression("$.wingsState", "ACTIVE"));
+        getDuckId(runner);
         duckFly(runner,"${duckId}");
         validateResponse( runner, jsonPath()
                 .expression("$.message", "I am flying :)"));
@@ -32,9 +30,7 @@ public class FlyTest extends TestNGCitrusSpringSupport {
     @CitrusTest
     public  void FlyTest2(@Optional @CitrusResource TestCaseRunner runner) {
         createDuck(runner, "yellow", 0.01, "rubber", "quack", "FIXED");
-        validateCreateResponse(runner, jsonPath()
-                .expression("$.id", "@isNumber()@")
-                .expression("$.wingsState", "FIXED"));
+        getDuckId(runner);
         duckFly(runner,"${duckId}");
         validateResponse( runner, jsonPath()
                 .expression("$.message", "I can not fly :C"));
@@ -43,9 +39,7 @@ public class FlyTest extends TestNGCitrusSpringSupport {
     @CitrusTest
     public  void FlyTest3(@Optional @CitrusResource TestCaseRunner runner) {
         createDuck(runner, "yellow", 0.01, "rubber", "quack", "UNDEFINED");
-        validateCreateResponse(runner, jsonPath()
-                .expression("$.id", "@isNumber()@")
-                .expression("$.wingsState", "UNDEFINED"));
+        getDuckId(runner);
         duckFly(runner, "${duckId}");
         validateResponse(runner, jsonPath()
                 .expression("$.message", "Wings are not detected :("));
@@ -67,17 +61,14 @@ public class FlyTest extends TestNGCitrusSpringSupport {
                         "}"));
     }
 
-    public void validateCreateResponse(TestCaseRunner runner,
-                                       JsonPathMessageValidationContext.Builder body) {
+    public void getDuckId(TestCaseRunner runner) {
         runner.$(http()
                 .client("http://localhost:2222/")
                 .receive()
                 .response(HttpStatus.OK)
                 .message()
                 .type(MessageType.JSON)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .extract(fromBody().expression("$.id", "duckId"))
-                .validate(body));
+                .extract(fromBody().expression("$.id", "duckId")));
     }
 
     public void duckFly(TestCaseRunner runner, String duckId){

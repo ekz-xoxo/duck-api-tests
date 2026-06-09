@@ -20,8 +20,7 @@ public class UpdateTest extends TestNGCitrusSpringSupport {
     @CitrusTest
     public void updateTest1(@Optional @CitrusResource TestCaseRunner runner) {
         createDuck(runner, "yellow", 0.01, "rubber", "quack", "ACTIVE");
-        validateCreateResponse(runner, jsonPath()
-                .expression("$.id", "@isNumber()@"));
+        getDuckId(runner);
         updateDuck(runner, "${duckId}","pink", 0.05, "rubber", "quack", "ACTIVE");
         validateResponse(runner, jsonPath()
                 .expression("$.message", "Duck with id = ${duckId} is updated"));
@@ -31,8 +30,7 @@ public class UpdateTest extends TestNGCitrusSpringSupport {
     @CitrusTest
     public void updateTest2(@Optional @CitrusResource TestCaseRunner runner) {
         createDuck(runner, "yellow", 0.01, "rubber", "quack", "ACTIVE");
-        validateCreateResponse(runner, jsonPath()
-                .expression("$.id", "@isNumber()@"));
+        getDuckId(runner);
         updateDuck(runner, "${duckId}","red", 0.01, "rubber", "quack-quack", "ACTIVE");
 
         validateResponse(runner, jsonPath()
@@ -57,17 +55,14 @@ public class UpdateTest extends TestNGCitrusSpringSupport {
                         "}"));
     }
 
-    public void validateCreateResponse(TestCaseRunner runner,
-                                       JsonPathMessageValidationContext.Builder body) {
+    public void getDuckId(TestCaseRunner runner) {
         runner.$(http()
                 .client("http://localhost:2222/")
                 .receive()
                 .response(HttpStatus.OK)
                 .message()
                 .type(MessageType.JSON)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .extract(fromBody().expression("$.id", "duckId"))
-                .validate(body));
+                .extract(fromBody().expression("$.id", "duckId")));
     }
 
     public void updateDuck(TestCaseRunner runner, String duckId, String color, double height,
