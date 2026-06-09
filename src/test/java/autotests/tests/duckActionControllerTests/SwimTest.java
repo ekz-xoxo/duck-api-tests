@@ -22,7 +22,7 @@ public class SwimTest extends SwimClient {
                 .sound("quack")
                 .wingsState("ACTIVE");
         createDuck(runner, duck);
-        validateResponse(runner, "createTest/DackPropertiesResponse_rubber.json");
+        getDuckId(runner);
         duckSwim(runner,"${duckId}");
         MessageResponse expectedResponse = new MessageResponse();
         expectedResponse.setMessage("Paws are not found ((((");

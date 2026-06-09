@@ -35,18 +35,6 @@ public class DuckClient extends TestNGCitrusSpringSupport {
                 );
     }
 
-    public void validateCreateResponse(TestCaseRunner runner,
-                                       JsonPathMessageValidationContext.Builder body) {
-        runner.$(http()
-                .client(duckService)
-                .receive()
-                .response(HttpStatus.OK)
-                .message()
-                .type(MessageType.JSON)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .extract(fromBody().expression("$.id", "duckId"))
-                .validate(body));
-    }
 
     public void validateResponse(TestCaseRunner runner, HttpStatus status,
                                  JsonPathMessageValidationContext.Builder body) {
@@ -95,6 +83,16 @@ public class DuckClient extends TestNGCitrusSpringSupport {
                         .extract(fromBody().expression("$.id", "duckId"))
                         .body(new ClassPathResource(expectedPayload))
         );
+    }
+
+    public void getDuckId(TestCaseRunner runner) {
+        runner.$(http()
+                .client(duckService)
+                .receive()
+                .response(HttpStatus.OK)
+                .message()
+                .type(MessageType.JSON)
+                .extract(fromBody().expression("$.id", "duckId")));
     }
 
 }

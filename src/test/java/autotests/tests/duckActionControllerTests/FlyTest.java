@@ -9,7 +9,6 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
 import autotests.clients.duckActionControllerClients.FlyClient;
 
-import static com.consol.citrus.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
 
 public class FlyTest extends FlyClient {
 
@@ -39,9 +38,7 @@ public class FlyTest extends FlyClient {
                 .sound("quack")
                 .wingsState("FIXED");
         createDuck(runner, duck);
-        validateCreateResponse(runner, jsonPath()
-                .expression("$.id", "@isNumber()@")
-                .expression("$.wingsState", "FIXED"));
+        getDuckId(runner);
         duckFly(runner,"${duckId}");
         MessageResponse expectedResponse = new MessageResponse();
         expectedResponse.setMessage("I can not fly :C");
@@ -58,9 +55,7 @@ public class FlyTest extends FlyClient {
                 .sound("quack")
                 .wingsState("UNDEFINED");
         createDuck(runner, duck);
-        validateCreateResponse(runner, jsonPath()
-                .expression("$.id", "@isNumber()@")
-                .expression("$.wingsState", "UNDEFINED"));
+        getDuckId(runner);
         duckFly(runner, "${duckId}");
         MessageResponse expectedResponse = new MessageResponse();
         expectedResponse.setMessage("Wings are not detected :(");

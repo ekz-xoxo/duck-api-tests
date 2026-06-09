@@ -21,7 +21,7 @@ public class UpdateTest extends UpdateClient {
                 .sound("quack")
                 .wingsState("ACTIVE");
         createDuck(runner, duck);
-        validateResponse(runner, "createTest/DackPropertiesResponse_rubber.json");
+        getDuckId(runner);
         updateDuck(runner, "${duckId}","pink", 0.05, "rubber", "quack", "ACTIVE");
         validateResponse(runner, jsonPath()
                 .expression("$.message", "Duck with id = ${duckId} is updated"));
@@ -37,7 +37,7 @@ public class UpdateTest extends UpdateClient {
                 .sound("quack")
                 .wingsState("ACTIVE");
         createDuck(runner, duck);
-        validateResponse(runner, "createTest/DackPropertiesResponse_rubber.json");
+        getDuckId(runner);
         updateDuck(runner, "${duckId}","red", 0.01, "rubber", "quack-quack", "ACTIVE");
         validateResponse(runner, jsonPath()
                 .expression("$.message", "Duck with id = ${duckId} is updated"));

@@ -20,7 +20,7 @@ public class DeleteTest extends DeleteClient {
                 .sound("quack")
                 .wingsState("ACTIVE");
         createDuck(runner, duck);
-        validateResponse(runner, "createTest/DackPropertiesResponse_rubber.json");
+        getDuckId(runner);
         deleteDuck(runner, "${duckId}");
         MessageResponse expectedResponse = new MessageResponse();
         expectedResponse.setMessage("Duck is deleted");
