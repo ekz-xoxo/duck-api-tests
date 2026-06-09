@@ -1,5 +1,6 @@
 plugins {
-    id("java")
+    id("java");
+    id("io.qameta.allure' version'2.9.6")
 }
 
 group = "autotests"
@@ -19,6 +20,9 @@ dependencies {
     testImplementation("com.consol.citrus:citrus-validation-json:3.4.0")
     testImplementation("org.slf4j:slf4j-reload4j:2.0.7")
     testImplementation("org.projectlombok:lombok:1.18.28")
+    testImplementation("com.consol.citrus:citrus-sql:3.4.0")
+    testImplementation("com.h2database:h2:1.4.196")
+    testImplementation("io.qameta.allure:allure-testing:2.9.6")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testCompileOnly("org.projectlombok:lombok:1.18.32")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.32")
@@ -27,3 +31,4 @@ dependencies {
 tasks.test {
     useTestNG()
 }
+

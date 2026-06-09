@@ -13,8 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.test.context.ContextConfiguration;
 
+import static com.consol.citrus.actions.ExecuteSQLAction.Builder.sql;
+import static com.consol.citrus.actions.ExecuteSQLQueryAction.Builder.query;
 import static com.consol.citrus.dsl.MessageSupport.MessageBodySupport.fromBody;
 import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 
@@ -23,6 +26,13 @@ public class DuckClient extends TestNGCitrusSpringSupport {
 
     @Autowired
     protected HttpClient duckService;
+
+    @Autowired
+    protected SingleConnectionDataSource testDb;
+
+    public void updateDatabase(TestCaseRunner runner, String query){
+        runner.$(sql(testDb).statement(query));
+    }
 
     public void createDuck(TestCaseRunner runner, DuckPropertiesRequest duckPropertiesRequest) {
         runner.$(http()
@@ -33,6 +43,16 @@ public class DuckClient extends TestNGCitrusSpringSupport {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(new ObjectMappingPayloadBuilder(duckPropertiesRequest, new ObjectMapper()))
                 );
+    }
+
+    protected void validateDuckInDb(TestCaseRunner runner,String id,String color,String height,String material, String sound, String wingsState){
+        runner.$(query(testDb)
+                .statement("SELECT * FROM DUCK WHERE ID="+ id)
+                .validate("COLOR",color)
+                .validate("HEIGHT",height)
+                .validate("MATERIAL",material)
+                .validate("SOUND",sound)
+                .validate("WINGS_STATE",wingsState));
     }
 
 
@@ -94,5 +114,7 @@ public class DuckClient extends TestNGCitrusSpringSupport {
                 .type(MessageType.JSON)
                 .extract(fromBody().expression("$.id", "duckId")));
     }
+
+
 
 }

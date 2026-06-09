@@ -1,6 +1,5 @@
 package autotests.tests.duckActionControllerTests;
 
-import autotests.payloads.request.DuckPropertiesRequest;
 import autotests.payloads.response.MessageResponse;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
@@ -9,21 +8,21 @@ import org.springframework.http.HttpStatus;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
 import autotests.clients.duckActionControllerClients.SwimClient;
-import static com.consol.citrus.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
+
+import static com.consol.citrus.container.FinallySequence.Builder.doFinally;
 
 public class SwimTest extends SwimClient {
     @Test(description = "уточка с существующим id")
     @CitrusTest
     public  void swimTest1(@Optional @CitrusResource TestCaseRunner runner) {
-        DuckPropertiesRequest duck = new DuckPropertiesRequest()
-                .color("yellow")
-                .height(0.01)
-                .material("rubber")
-                .sound("quack")
-                .wingsState("ACTIVE");
-        createDuck(runner, duck);
-        getDuckId(runner);
-        duckSwim(runner,"${duckId}");
+        String id = runner.variable("duckId","123");
+        runner.$(doFinally().actions(context->
+                updateDatabase(runner,"DELETE FROM DUCK WHERE ID =${duckId}")));
+        updateDatabase(runner,
+                "insert into DUCK (id,color,height,material,sound,wings_state)\n" +
+                        "values(" + id + ",'yellow',0.01, 'rubber', 'quack', 'ACTIVE');");
+        duckSwim(runner,id);
+        validateDuckInDb(runner,id,"yellow","0.01","rubber", "quack", "ACTIVE");
         MessageResponse expectedResponse = new MessageResponse();
         expectedResponse.setMessage("Paws are not found ((((");
         validateResponse(runner, HttpStatus.NOT_FOUND, expectedResponse);
