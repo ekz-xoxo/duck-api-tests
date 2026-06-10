@@ -5,11 +5,17 @@ import autotests.payloads.request.DuckPropertiesRequest;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.container.FinallySequence.Builder.doFinally;
 
+@Epic("Тесты duck-controller")
+@Feature("Создание уточки")
+@Story("Эндпоинт /api/duck/create")
 public class CreateTest extends DuckClient {
     @Test(description = "cоздание утки из rubber")
     @CitrusTest

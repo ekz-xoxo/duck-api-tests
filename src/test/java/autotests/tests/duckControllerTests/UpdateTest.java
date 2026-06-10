@@ -4,6 +4,9 @@ import autotests.payloads.request.DuckPropertiesRequest;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
 import autotests.clients.duckControllerClients.UpdateClient;
@@ -11,6 +14,9 @@ import autotests.clients.duckControllerClients.UpdateClient;
 import static com.consol.citrus.container.FinallySequence.Builder.doFinally;
 import static com.consol.citrus.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
 
+@Epic("Тесты duck-controller")
+@Feature("Обновление уточки")
+@Story("Эндпоинт /api/duck/update")
 public class UpdateTest extends UpdateClient {
     @Test(description = "обновление цвета и высоты утки")
     @CitrusTest

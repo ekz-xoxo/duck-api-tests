@@ -9,6 +9,7 @@ import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.qameta.allure.Step;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
@@ -30,21 +31,12 @@ public class DuckClient extends TestNGCitrusSpringSupport {
     @Autowired
     protected SingleConnectionDataSource testDb;
 
+    @Step("Обновляем БД")
     public void updateDatabase(TestCaseRunner runner, String query){
         runner.$(sql(testDb).statement(query));
     }
 
-    public void createDuck(TestCaseRunner runner, DuckPropertiesRequest duckPropertiesRequest) {
-        runner.$(http()
-                .client(duckService)
-                .send()
-                .post("/api/duck/create")
-                .message()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ObjectMappingPayloadBuilder(duckPropertiesRequest, new ObjectMapper()))
-                );
-    }
-
+    @Step("Проверяем уточку в БД")
     protected void validateDuckInDb(TestCaseRunner runner,String id,String color,String height,String material, String sound, String wingsState){
         runner.$(query(testDb)
                 .statement("SELECT * FROM DUCK WHERE ID="+ id)
@@ -55,7 +47,7 @@ public class DuckClient extends TestNGCitrusSpringSupport {
                 .validate("WINGS_STATE",wingsState));
     }
 
-
+    @Step("Валидация ответа")
     public void validateResponse(TestCaseRunner runner, HttpStatus status,
                                  JsonPathMessageValidationContext.Builder body) {
         runner.$(http()
@@ -68,11 +60,13 @@ public class DuckClient extends TestNGCitrusSpringSupport {
                 .validate(body));
     }
 
+    @Step("Валидация ответа")
     public void validateResponse(TestCaseRunner runner,
                                  JsonPathMessageValidationContext.Builder body) {
         validateResponse(runner, HttpStatus.OK, body);
     }
 
+    @Step("Валидация ответа")
     public void validateResponse(TestCaseRunner runner, HttpStatus status, Object expectedPayload) {
         runner.$(http()
                 .client(duckService)
@@ -87,10 +81,12 @@ public class DuckClient extends TestNGCitrusSpringSupport {
                 )));
     }
 
+    @Step("Валидация ответа")
     public void validateResponse(TestCaseRunner runner, Object expectedPayload) {
         validateResponse(runner, HttpStatus.OK, expectedPayload);
     }
 
+    @Step("Валидация ответа")
     public void validateResponse(TestCaseRunner runner, String expectedPayload) {
         runner.$(
                 http()
@@ -105,6 +101,7 @@ public class DuckClient extends TestNGCitrusSpringSupport {
         );
     }
 
+    @Step("Извлекаем id созданной уточки")
     public void getDuckId(TestCaseRunner runner) {
         runner.$(http()
                 .client(duckService)
