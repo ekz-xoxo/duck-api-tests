@@ -29,6 +29,7 @@ target/citrus-reports/
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
+target/citrus-reports/
 
 ### NetBeans ###
 /nbproject/private/
