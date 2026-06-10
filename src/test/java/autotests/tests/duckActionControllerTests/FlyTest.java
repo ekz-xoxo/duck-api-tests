@@ -29,7 +29,7 @@ public class FlyTest extends FlyClient {
         duckFly(runner,"${duckId}");
         validateDuckInDb(runner,id,"yellow","0.01","rubber", "quack", "ACTIVE");
         MessageResponse expectedResponse = new MessageResponse();
-        expectedResponse.setMessage("I am flying :)");
+        expectedResponse.setMessage("I'm flying");
         validateResponse(runner, expectedResponse);
     }
     @Test(description = "уточка с неактивными крыльями")
@@ -44,7 +44,7 @@ public class FlyTest extends FlyClient {
         duckFly(runner,"${duckId}");
         validateDuckInDb(runner,id,"yellow","0.01","rubber", "quack", "FIXED");
         MessageResponse expectedResponse = new MessageResponse();
-        expectedResponse.setMessage("I can not fly :C");
+        expectedResponse.setMessage("I can't fly");
         validateResponse(runner, expectedResponse);
     }
 
@@ -60,7 +60,7 @@ public class FlyTest extends FlyClient {
         duckFly(runner,"${duckId}");
         validateDuckInDb(runner,id,"yellow","0.01","rubber", "quack", "UNDEFINED");
         MessageResponse expectedResponse = new MessageResponse();
-        expectedResponse.setMessage("Wings are not detected :(");
+        expectedResponse.setMessage("Wings are not detected");
         validateResponse(runner, expectedResponse);
     }
 
