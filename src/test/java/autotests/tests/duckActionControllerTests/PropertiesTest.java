@@ -1,5 +1,4 @@
 package autotests.tests.duckActionControllerTests;
-
 import autotests.clients.DuckClient;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
@@ -30,11 +29,16 @@ public class PropertiesTest extends DuckClient {
 
         duckProperties(runner, id);
 
-        validateResponse(runner, jsonPath()
-                .expression("$.color", color)
-                .expression("$.material", material)
-                .expression("$.sound", sound)
-                .expression("$.wingsState", wingsState));
+        if ("wood".equals(material)) {
+            validateEmptyResponse(runner, "ProretiesTest/DackPropertiesResponse_woodPropertiesTest.json");
+        } else {
+            validateResponse(runner, jsonPath()
+                    .expression("$.color", color)
+                    .expression("$.height", height)
+                    .expression("$.material", material)
+                    .expression("$.sound", sound)
+                    .expression("$.wingsState", wingsState));
+        }
     }
 
     @Test(description = "Проверка Properties с четным id", dataProvider = "evenDucks")
@@ -51,32 +55,37 @@ public class PropertiesTest extends DuckClient {
 
         duckProperties(runner, id);
 
-        validateResponse(runner, jsonPath()
-                .expression("$.color", color)
-                .expression("$.material", material)
-                .expression("$.sound", sound)
-                .expression("$.wingsState", wingsState));
+        if ("wood".equals(material)) {
+            validateEmptyResponse(runner, "ProretiesTest/DackPropertiesResponse_woodPropertiesTest.json");
+        } else {
+            validateResponse(runner, jsonPath()
+                    .expression("$.color", color)
+                    .expression("$.height", height)
+                    .expression("$.material", material)
+                    .expression("$.sound", sound)
+                    .expression("$.wingsState", wingsState));
+        }
     }
 
     @DataProvider(name = "oddDucks")
     public Object[][] oddDucks() {
         return new Object[][]{
-                {"1", "pink", "0.01", "rubber", "quack", "ACTIVE", null},
-                {"3", "yellow", "0.02", "rubber", "quack", "ACTIVE", null},
-                {"5", "yellow", "0.01", "wood", "quack", "ACTIVE", null},
-                {"7", "yellow", "0.01", "rubber", "quack-quack", "ACTIVE", null},
-                {"9", "yellow", "0.01", "rubber", "quack", "FIXED", null}
+                {"1", "pink", "1.0", "rubber", "quack", "ACTIVE", null},
+                {"3", "yellow", "2.0", "rubber", "quack", "ACTIVE", null},
+                {"5", "yellow", "1.0", "wood", "quack", "ACTIVE", null},
+                {"7", "yellow", "1.0", "rubber", "quack-quack", "ACTIVE", null},
+                {"9", "yellow", "1.0", "rubber", "quack", "FIXED", null}
         };
     }
 
     @DataProvider(name = "evenDucks")
     public Object[][] evenDucks() {
         return new Object[][]{
-                {"2", "pink", "0.01", "rubber", "quack", "ACTIVE", null},
-                {"4", "yellow", "0.02", "rubber", "quack", "ACTIVE", null},
-                {"6", "yellow", "0.01", "wood", "quack", "ACTIVE", null},
-                {"8", "yellow", "0.01", "rubber", "quack-quack", "ACTIVE", null},
-                {"10", "yellow", "0.01", "rubber", "quack", "FIXED", null}
+                {"2", "pink", "1.0", "rubber", "quack", "ACTIVE", null},
+                {"4", "yellow", "2.0", "rubber", "quack", "ACTIVE", null},
+                {"6", "yellow", "1.0", "wood", "quack", "ACTIVE", null},
+                {"8", "yellow", "1.0", "rubber", "quack-quack", "ACTIVE", null},
+                {"10", "yellow", "1.0", "rubber", "quack", "FIXED", null}
         };
     }
 

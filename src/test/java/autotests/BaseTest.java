@@ -99,6 +99,20 @@ public class BaseTest extends TestNGCitrusSpringSupport {
         );
     }
 
+    @Step("Валидация ответа")
+    public void validateEmptyResponse(TestCaseRunner runner, String expectedPayload) {
+        runner.$(
+                http()
+                        .client(duckService)
+                        .receive()
+                        .response(HttpStatus.OK)
+                        .message()
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .type(MessageType.JSON)
+                        .body(new ClassPathResource(expectedPayload))
+        );
+    }
+
     @Step("Извлекаем id созданной уточки")
     public void getDuckId(TestCaseRunner runner) {
         runner.$(http()
