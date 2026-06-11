@@ -1,6 +1,6 @@
 package autotests.tests.duckControllerTests;
 
-import autotests.payloads.request.DuckPropertiesRequest;
+import autotests.clients.DuckClient;
 import autotests.payloads.response.MessageResponse;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
@@ -10,14 +10,13 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
-import autotests.clients.duckControllerClients.DeleteClient;
 
 import static com.consol.citrus.container.FinallySequence.Builder.doFinally;
 
 @Epic("Тесты duck-controller")
 @Feature("Удаление уточки")
 @Story("Эндпоинт /api/duck/delete")
-public class DeleteTest extends DeleteClient {
+public class DeleteTest extends DuckClient {
     @Test(description = "удаление утки")
     @CitrusTest
     public void deleteDuckTest(@Optional @CitrusResource TestCaseRunner runner) {

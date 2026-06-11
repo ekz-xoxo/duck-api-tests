@@ -1,5 +1,6 @@
 package autotests.tests.duckActionControllerTests;
 
+import autotests.clients.DuckClient;
 import autotests.payloads.response.SoundResponse;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
@@ -9,12 +10,11 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
-import autotests.clients.duckActionControllerClients.QuackClient;
 
 @Epic("Тесты duck-action-controller")
 @Feature("Звуки уточки")
 @Story("Эндпоинт /api/duck/action/quack")
-public class QuackTest extends QuackClient {
+public class QuackTest extends DuckClient {
     @Test(description = "уточка с нечетным id")
     @CitrusTest
     public void quackTest1(@Optional @CitrusResource TestCaseRunner runner) {

@@ -1,13 +1,12 @@
 package autotests.tests.duckActionControllerTests;
 
-import autotests.clients.duckActionControllerClients.FlyClient;
+import autotests.clients.DuckClient;
 import autotests.payloads.response.MessageResponse;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import io.qameta.allure.Step;
 import io.qameta.allure.Story;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
@@ -16,7 +15,7 @@ import static com.consol.citrus.container.FinallySequence.Builder.doFinally;
 @Epic("Тесты duck-action-controller")
 @Feature("Полет уточки")
 @Story("Эндпоинт /api/duck/action/swim")
-public class FlyTest extends FlyClient {
+public class FlyTest extends DuckClient {
     @Test(description = "уточка с активными крыльями")
     @CitrusTest
     public  void FlyTest1(@Optional @CitrusResource TestCaseRunner runner) {
@@ -29,7 +28,7 @@ public class FlyTest extends FlyClient {
         duckFly(runner,"${duckId}");
         validateDuckInDb(runner,id,"yellow","0.01","rubber", "quack", "ACTIVE");
         MessageResponse expectedResponse = new MessageResponse();
-        expectedResponse.setMessage("I'm flying");
+        expectedResponse.setMessage("I am flying :)");
         validateResponse(runner, expectedResponse);
     }
     @Test(description = "уточка с неактивными крыльями")
@@ -44,7 +43,7 @@ public class FlyTest extends FlyClient {
         duckFly(runner,"${duckId}");
         validateDuckInDb(runner,id,"yellow","0.01","rubber", "quack", "FIXED");
         MessageResponse expectedResponse = new MessageResponse();
-        expectedResponse.setMessage("I can't fly");
+        expectedResponse.setMessage("I can not fly :C");
         validateResponse(runner, expectedResponse);
     }
 
@@ -60,7 +59,7 @@ public class FlyTest extends FlyClient {
         duckFly(runner,"${duckId}");
         validateDuckInDb(runner,id,"yellow","0.01","rubber", "quack", "UNDEFINED");
         MessageResponse expectedResponse = new MessageResponse();
-        expectedResponse.setMessage("Wings are not detected");
+        expectedResponse.setMessage("Wings are not detected :(");
         validateResponse(runner, expectedResponse);
     }
 

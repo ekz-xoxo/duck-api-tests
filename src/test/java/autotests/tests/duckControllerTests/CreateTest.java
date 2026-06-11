@@ -20,7 +20,7 @@ public class CreateTest extends DuckClient {
     @Test(description = "cоздание утки из rubber")
     @CitrusTest
     public void createTest1(@Optional @CitrusResource TestCaseRunner runner) {
-        String id = runner.variable("duckId","123");
+        String id = runner.variable("duckId","2");
         runner.$(doFinally().actions(context->
                 updateDatabase(runner,"DELETE FROM DUCK WHERE ID =${duckId}")));
         updateDatabase(runner,
