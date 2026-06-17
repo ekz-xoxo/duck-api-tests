@@ -18,18 +18,6 @@ public class SwimClient extends DuckClient {
                 .get("/api/duck/action/swim")
                 .queryParam("id", duckId));
     }
-
-    public void validateResponse(TestCaseRunner runner, JsonPathMessageValidationContext.Builder body){
-        runner.$(http()
-                .client(duckService)
-                .receive()
-                .response(HttpStatus.NOT_FOUND)
-                .message()
-                .type(MessageType.JSON)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .validate(body));
-    }
-
 }
 
 
