@@ -20,6 +20,8 @@ dependencies {
     testImplementation("org.slf4j:slf4j-reload4j:2.0.7")
     testImplementation("org.projectlombok:lombok:1.18.28")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testCompileOnly("org.projectlombok:lombok:1.18.32")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.32")
 }
 
 tasks.test {

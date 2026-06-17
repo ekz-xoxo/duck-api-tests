@@ -15,7 +15,12 @@ public class PropertiesTest extends PropertiesClient {
     public void propertiesTest1(@Optional @CitrusResource TestCaseRunner runner){
       duckProperties(runner,"2");
         validateResponse( runner, jsonPath()
-                .expression("$", "{}"));
+                .expression("$.color", "yellow")
+                .expression("$.height", "@isNumber()@")
+                .expression("$.material", "rubber")
+                .expression("$.sound", "quack")
+                .expression("$.wingsState", "FIXED")
+        );
     }
     @Test(description = "Проверка Properties с нечетным id")
     @CitrusTest
