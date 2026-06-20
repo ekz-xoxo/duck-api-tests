@@ -21,47 +21,44 @@ public class FlyTest extends FlyClient {
     @CitrusTest
     public  void FlyTest1(@Optional @CitrusResource TestCaseRunner runner) {
         String id = runner.variable("duckId","123");
-        runner.$(doFinally().actions(context->
-                updateDatabase(runner,"DELETE FROM DUCK WHERE ID =${duckId}")));
         updateDatabase(runner,
                 "insert into DUCK (id,color,height,material,sound,wings_state)\n" +
                         "values(" + id + ",'yellow',0.01, 'rubber', 'quack', 'ACTIVE');");
         duckFly(runner,"${duckId}");
-        validateDuckInDb(runner,id,"yellow","0.01","rubber", "quack", "ACTIVE");
         MessageResponse expectedResponse = new MessageResponse();
         expectedResponse.setMessage("I am flying :)");
         validateResponse(runner, expectedResponse);
+        updateDatabase(runner,"DELETE FROM DUCK WHERE ID =${duckId}");
+        validateDuckNotInDb(runner, id);
     }
     @Test(description = "уточка с неактивными крыльями")
     @CitrusTest
     public  void FlyTest2(@Optional @CitrusResource TestCaseRunner runner) {
         String id = runner.variable("duckId","123");
-        runner.$(doFinally().actions(context->
-                updateDatabase(runner,"DELETE FROM DUCK WHERE ID =${duckId}")));
         updateDatabase(runner,
                 "insert into DUCK (id,color,height,material,sound,wings_state)\n" +
                         "values(" + id + ",'yellow',0.01, 'rubber', 'quack', 'FIXED');");
         duckFly(runner,"${duckId}");
-        validateDuckInDb(runner,id,"yellow","0.01","rubber", "quack", "FIXED");
         MessageResponse expectedResponse = new MessageResponse();
         expectedResponse.setMessage("I can not fly :C");
         validateResponse(runner, expectedResponse);
+        updateDatabase(runner,"DELETE FROM DUCK WHERE ID =${duckId}");
+        validateDuckNotInDb(runner, id);
     }
 
     @Test(description = "уточка с неопределенными крыльями")
     @CitrusTest
     public  void FlyTest3(@Optional @CitrusResource TestCaseRunner runner) {
         String id = runner.variable("duckId","123");
-        runner.$(doFinally().actions(context->
-                updateDatabase(runner,"DELETE FROM DUCK WHERE ID =${duckId}")));
         updateDatabase(runner,
                 "insert into DUCK (id,color,height,material,sound,wings_state)\n" +
                         "values(" + id + ",'yellow',0.01, 'rubber', 'quack', 'UNDEFINED');");
         duckFly(runner,"${duckId}");
-        validateDuckInDb(runner,id,"yellow","0.01","rubber", "quack", "UNDEFINED");
         MessageResponse expectedResponse = new MessageResponse();
         expectedResponse.setMessage("Wings are not detected :(");
         validateResponse(runner, expectedResponse);
+        updateDatabase(runner,"DELETE FROM DUCK WHERE ID =${duckId}");
+        validateDuckNotInDb(runner, id);
     }
 
 }

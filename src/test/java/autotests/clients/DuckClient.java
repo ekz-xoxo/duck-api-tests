@@ -112,6 +112,13 @@ public class DuckClient extends TestNGCitrusSpringSupport {
                 .extract(fromBody().expression("$.id", "duckId")));
     }
 
+    @Step("Проверяем, что уточки нет в БД")
+    public void validateDuckNotInDb(TestCaseRunner runner, String id) {
+        runner.$(query(testDb)
+                .statement("SELECT COUNT(*) AS DUCK_COUNT FROM DUCK WHERE ID = " + id)
+                .validate("DUCK_COUNT", "0"));
+    }
+
 
 
 }

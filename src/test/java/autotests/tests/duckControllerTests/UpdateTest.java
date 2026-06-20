@@ -22,31 +22,29 @@ public class UpdateTest extends UpdateClient {
     @CitrusTest
     public void updateTest1(@Optional @CitrusResource TestCaseRunner runner) {
         String id = runner.variable("duckId","123");
-        runner.$(doFinally().actions(context->
-                updateDatabase(runner,"DELETE FROM DUCK WHERE ID =${duckId}")));
         updateDatabase(runner,
                 "insert into DUCK (id,color,height,material,sound,wings_state)\n" +
                         "values(" + id + ",'yellow',0.01, 'rubber', 'quack', 'ACTIVE');");
-        validateDuckInDb(runner,id,"yellow","0.01","rubber", "quack", "ACTIVE");
         updateDuck(runner, "${duckId}","pink", 0.05, "rubber", "quack", "ACTIVE");
         validateDuckInDb(runner,id,"pink","0.05","rubber", "quack", "ACTIVE");
         validateResponse(runner, jsonPath()
                 .expression("$.message", "Duck with id = " + id + " is updated"));
+        updateDatabase(runner,"DELETE FROM DUCK WHERE ID =${duckId}");
+        validateDuckNotInDb(runner, id);
     }
     @Test(description = "обновление звука и цвета утки")
     @CitrusTest
     public void updateTest2(@Optional @CitrusResource TestCaseRunner runner) {
         String id = runner.variable("duckId","123");
-        runner.$(doFinally().actions(context->
-                updateDatabase(runner,"DELETE FROM DUCK WHERE ID =${duckId}")));
         updateDatabase(runner,
                 "insert into DUCK (id,color,height,material,sound,wings_state)\n" +
                         "values(" + id + ",'yellow',0.01, 'rubber', 'quack', 'ACTIVE');");
-        validateDuckInDb(runner,id,"yellow","0.01","rubber", "quack", "ACTIVE");
         updateDuck(runner, "${duckId}","red", 0.01, "rubber", "quack-quack", "ACTIVE");
         validateDuckInDb(runner,id,"red","0.01","rubber", "quack-quack", "ACTIVE");
         validateResponse(runner, jsonPath()
                 .expression("$.message", "Duck with id = " + id + " is updated"));
+        updateDatabase(runner,"DELETE FROM DUCK WHERE ID =${duckId}");
+        validateDuckNotInDb(runner, id);
 
     }
 

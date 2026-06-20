@@ -21,25 +21,22 @@ public class CreateTest extends DuckClient {
     @CitrusTest
     public void createTest1(@Optional @CitrusResource TestCaseRunner runner) {
         String id = runner.variable("duckId","123");
-        runner.$(doFinally().actions(context->
-                updateDatabase(runner,"DELETE FROM DUCK WHERE ID =${duckId}")));
-        updateDatabase(runner,
-                "insert into DUCK (id,color,height,material,sound,wings_state)\n" +
-                        "values(" + id + ",'yellow',0.01, 'rubber', 'quack', 'ACTIVE');");
+        createDuck(runner, "yellow", 0.01, "rubber", "quack", "ACTIVE");
         validateDuckInDb(runner,id,"yellow","0.01","rubber", "quack", "ACTIVE");
-
+        updateDatabase(runner,"DELETE FROM DUCK WHERE ID =${duckId}");
+        validateDuckNotInDb(runner, id);
 
     }
     @Test(description = "создание утки из wood")
     @CitrusTest
     public void createTest2(@Optional @CitrusResource TestCaseRunner runner) {
         String id = runner.variable("duckId","123");
-        runner.$(doFinally().actions(context->
-                updateDatabase(runner,"DELETE FROM DUCK WHERE ID =${duckId}")));
         updateDatabase(runner,
                 "insert into DUCK (id,color,height,material,sound,wings_state)\n" +
                         "values(" + id + ",'yellow',0.01, 'wood', 'quack', 'ACTIVE');");
         validateDuckInDb(runner,id,"yellow","0.01","wood", "quack", "ACTIVE");
+        updateDatabase(runner,"DELETE FROM DUCK WHERE ID =${duckId}");
+        validateDuckNotInDb(runner, id);
     }
 
 }

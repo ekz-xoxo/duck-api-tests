@@ -22,16 +22,15 @@ public class SwimTest extends SwimClient {
     @CitrusTest
     public  void swimTest1(@Optional @CitrusResource TestCaseRunner runner) {
         String id = runner.variable("duckId","123");
-        runner.$(doFinally().actions(context->
-                updateDatabase(runner,"DELETE FROM DUCK WHERE ID =${duckId}")));
         updateDatabase(runner,
                 "insert into DUCK (id,color,height,material,sound,wings_state)\n" +
                         "values(" + id + ",'yellow',0.01, 'rubber', 'quack', 'ACTIVE');");
         duckSwim(runner,id);
-        validateDuckInDb(runner,id,"yellow","0.01","rubber", "quack", "ACTIVE");
         MessageResponse expectedResponse = new MessageResponse();
         expectedResponse.setMessage("Paws are not found ((((");
         validateResponse(runner, HttpStatus.NOT_FOUND, expectedResponse);
+        updateDatabase(runner,"DELETE FROM DUCK WHERE ID =${duckId}");
+        validateDuckNotInDb(runner, id);
     }
 
     @Test(description = "уточка с неcуществующим id")
@@ -41,6 +40,7 @@ public class SwimTest extends SwimClient {
         MessageResponse expectedResponse = new MessageResponse();
         expectedResponse.setMessage("Paws are not found ((((");
         validateResponse(runner, HttpStatus.NOT_FOUND, expectedResponse);
+
     }
 
 }
