@@ -1,23 +1,13 @@
 package autotests.clients.duckActionControllerClients;
 
-import autotests.EndpointConfig;
+import autotests.clients.DuckClient;
 import com.consol.citrus.TestCaseRunner;
-import com.consol.citrus.http.client.HttpClient;
-import com.consol.citrus.message.MessageType;
-import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
-import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
+import io.qameta.allure.Step;
 
 import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 
-@ContextConfiguration(classes = {EndpointConfig.class})
-public class QuackClient extends TestNGCitrusSpringSupport {
-    @Autowired
-    protected HttpClient duckService;
-
+public class QuackClient extends DuckClient {
+    @Step("Просим уточку что-нибудь сказать")
     public void duckQuack(TestCaseRunner runner, String duckId, String repetitionCount, String soundCount ){
         runner.$(http()
                 .client(duckService)
@@ -27,20 +17,6 @@ public class QuackClient extends TestNGCitrusSpringSupport {
                 .queryParam("repetitionCount", repetitionCount)
                 .queryParam("soundCount", soundCount));
     }
-
-    public void validateResponse(TestCaseRunner runner, JsonPathMessageValidationContext.Builder body){
-        runner.$(http()
-                .client(duckService)
-                .receive()
-                .response(HttpStatus.OK)
-                .message()
-                .type(MessageType.JSON)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .validate(body));
-    }
-
-
-
 }
 
 
