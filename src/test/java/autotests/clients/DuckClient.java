@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 
+import static com.consol.citrus.actions.ExecuteSQLQueryAction.Builder.query;
 import static com.consol.citrus.dsl.MessageSupport.MessageBodySupport.fromBody;
 import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 
@@ -107,6 +108,28 @@ public class DuckClient extends BaseTest {
                 .queryParam("material", material)
                 .queryParam("sound", sound)
                 .queryParam("wingsState", wingsState));
+    }
+
+    @Step("Проверяем уточку в БД")
+    protected void validateDuckInDb(TestCaseRunner runner,String id,String color,String height,String material, String sound, String wingsState){
+        runner.$(query(testDb)
+                .statement("SELECT * FROM DUCK WHERE ID="+ id)
+                .validate("COLOR",color)
+                .validate("HEIGHT",height)
+                .validate("MATERIAL",material)
+                .validate("SOUND",sound)
+                .validate("WINGS_STATE",wingsState));
+    }
+
+    @Step("Извлекаем id созданной уточки")
+    public void getDuckId(TestCaseRunner runner) {
+        runner.$(http()
+                .client(duckService)
+                .receive()
+                .response(HttpStatus.OK)
+                .message()
+                .type(MessageType.JSON)
+                .extract(fromBody().expression("$.id", "duckId")));
     }
 
 

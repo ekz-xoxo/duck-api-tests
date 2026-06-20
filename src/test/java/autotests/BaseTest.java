@@ -34,16 +34,7 @@ public class BaseTest extends TestNGCitrusSpringSupport {
         runner.$(sql(testDb).statement(query));
     }
 
-    @Step("Проверяем уточку в БД")
-    protected void validateDuckInDb(TestCaseRunner runner,String id,String color,String height,String material, String sound, String wingsState){
-        runner.$(query(testDb)
-                .statement("SELECT * FROM DUCK WHERE ID="+ id)
-                .validate("COLOR",color)
-                .validate("HEIGHT",height)
-                .validate("MATERIAL",material)
-                .validate("SOUND",sound)
-                .validate("WINGS_STATE",wingsState));
-    }
+
 
     @Step("Валидация ответа")
     public void validateResponse(TestCaseRunner runner, HttpStatus status,
@@ -100,7 +91,7 @@ public class BaseTest extends TestNGCitrusSpringSupport {
     }
 
     @Step("Валидация ответа")
-    public void validateEmptyResponse(TestCaseRunner runner, String expectedPayload) {
+    public void validateResponseWithoutId(TestCaseRunner runner, String expectedPayload) {
         runner.$(
                 http()
                         .client(duckService)
@@ -113,16 +104,7 @@ public class BaseTest extends TestNGCitrusSpringSupport {
         );
     }
 
-    @Step("Извлекаем id созданной уточки")
-    public void getDuckId(TestCaseRunner runner) {
-        runner.$(http()
-                .client(duckService)
-                .receive()
-                .response(HttpStatus.OK)
-                .message()
-                .type(MessageType.JSON)
-                .extract(fromBody().expression("$.id", "duckId")));
-    }
+
 
 
 

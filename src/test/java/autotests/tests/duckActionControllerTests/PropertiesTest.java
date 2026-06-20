@@ -30,7 +30,7 @@ public class PropertiesTest extends DuckClient {
         duckProperties(runner, id);
 
         if ("wood".equals(material)) {
-            validateEmptyResponse(runner, "ProretiesTest/DackPropertiesResponse_woodPropertiesTest.json");
+            validateResponseWithoutId(runner, "ProretiesTest/DackPropertiesResponse_woodPropertiesTest.json");
         } else {
             validateResponse(runner, jsonPath()
                     .expression("$.color", color)
@@ -56,7 +56,7 @@ public class PropertiesTest extends DuckClient {
         duckProperties(runner, id);
 
         if ("wood".equals(material)) {
-            validateEmptyResponse(runner, "ProretiesTest/DackPropertiesResponse_woodPropertiesTest.json");
+            validateResponseWithoutId(runner, "ProretiesTest/DackPropertiesResponse_woodPropertiesTest.json");
         } else {
             validateResponse(runner, jsonPath()
                     .expression("$.color", color)
