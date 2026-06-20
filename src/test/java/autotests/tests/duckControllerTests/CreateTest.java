@@ -1,6 +1,7 @@
 package autotests.tests.duckControllerTests;
 
 import autotests.clients.DuckClient;
+import autotests.clients.duckControllerClients.CreateClient;
 import autotests.payloads.request.DuckPropertiesRequest;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
@@ -16,27 +17,37 @@ import static com.consol.citrus.container.FinallySequence.Builder.doFinally;
 @Epic("Тесты duck-controller")
 @Feature("Создание уточки")
 @Story("Эндпоинт /api/duck/create")
-public class CreateTest extends DuckClient {
+public class CreateTest extends CreateClient {
     @Test(description = "cоздание утки из rubber")
     @CitrusTest
     public void createTest1(@Optional @CitrusResource TestCaseRunner runner) {
-        String id = runner.variable("duckId","123");
-        createDuck(runner, "yellow", 0.01, "rubber", "quack", "ACTIVE");
-        validateDuckInDb(runner,id,"yellow","0.01","rubber", "quack", "ACTIVE");
+        DuckPropertiesRequest duck = new DuckPropertiesRequest()
+                .color("yellow")
+                .height(0.01)
+                .material("rubber")
+                .sound("quack")
+                .wingsState("ACTIVE");
+        createDuck(runner,duck);
+        validateDuckInDb(runner,"@IsNumber","yellow","0.01","rubber", "quack", "ACTIVE");
         updateDatabase(runner,"DELETE FROM DUCK WHERE ID =${duckId}");
-        validateDuckNotInDb(runner, id);
+        getDuckId(runner);
+        validateDuckNotInDb(runner, "${duckId}");
 
     }
     @Test(description = "создание утки из wood")
     @CitrusTest
     public void createTest2(@Optional @CitrusResource TestCaseRunner runner) {
-        String id = runner.variable("duckId","123");
-        updateDatabase(runner,
-                "insert into DUCK (id,color,height,material,sound,wings_state)\n" +
-                        "values(" + id + ",'yellow',0.01, 'wood', 'quack', 'ACTIVE');");
-        validateDuckInDb(runner,id,"yellow","0.01","wood", "quack", "ACTIVE");
+        DuckPropertiesRequest duck = new DuckPropertiesRequest()
+                .color("yellow")
+                .height(0.01)
+                .material("wood")
+                .sound("quack")
+                .wingsState("ACTIVE");
+        createDuck(runner,duck);
+        validateDuckInDb(runner,"@IsNumber","yellow","0.01","rubber", "quack", "ACTIVE");
         updateDatabase(runner,"DELETE FROM DUCK WHERE ID =${duckId}");
-        validateDuckNotInDb(runner, id);
+        getDuckId(runner);
+        validateDuckNotInDb(runner, "${duckId}");
     }
 
 }
