@@ -1,43 +1,45 @@
 package autotests.tests.duckControllerTests;
 
+import autotests.clients.DuckClient;
+import autotests.payloads.request.DuckPropertiesRequest;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
-import autotests.clients.duckControllerClients.CreateClient;
 
-import static com.consol.citrus.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
+import static com.consol.citrus.container.FinallySequence.Builder.doFinally;
 
-public class CreateTest extends CreateClient {
+@Epic("Тесты duck-controller")
+@Feature("Создание уточки")
+@Story("Эндпоинт /api/duck/create")
+public class CreateTest extends DuckClient {
     @Test(description = "cоздание утки из rubber")
     @CitrusTest
     public void createTest1(@Optional @CitrusResource TestCaseRunner runner) {
-        createDuck(runner, "yellow", 0.01, "wood", "quack", "ACTIVE");
+        String id = runner.variable("duckId","2");
+        runner.$(doFinally().actions(context->
+                updateDatabase(runner,"DELETE FROM DUCK WHERE ID =${duckId}")));
+        updateDatabase(runner,
+                "insert into DUCK (id,color,height,material,sound,wings_state)\n" +
+                        "values(" + id + ",'yellow',0.01, 'rubber', 'quack', 'ACTIVE');");
+        validateDuckInDb(runner,id,"yellow","0.01","rubber", "quack", "ACTIVE");
 
-        validateCreateResponse(runner, jsonPath()
-                .expression("$.id", "@isNumber()@")
-                .expression("$.color", "yellow")
-                .expression("$.height", "0.01")
-                .expression("$.material", "wood")
-                .expression("$.sound", "quack")
-                .expression("$.wingsState", "ACTIVE")
-        );
 
     }
     @Test(description = "создание утки из wood")
     @CitrusTest
     public void createTest2(@Optional @CitrusResource TestCaseRunner runner) {
-        createDuck(runner, "yellow", 0.01, "wood", "quack", "ACTIVE");
-
-        validateCreateResponse(runner, jsonPath()
-                .expression("$.id", "@isNumber()@")
-                .expression("$.color", "yellow")
-                .expression("$.height", "0.01")
-                .expression("$.material", "wood")
-                .expression("$.sound", "quack")
-                .expression("$.wingsState", "ACTIVE")
-        );
+        String id = runner.variable("duckId","123");
+        runner.$(doFinally().actions(context->
+                updateDatabase(runner,"DELETE FROM DUCK WHERE ID =${duckId}")));
+        updateDatabase(runner,
+                "insert into DUCK (id,color,height,material,sound,wings_state)\n" +
+                        "values(" + id + ",'yellow',0.01, 'wood', 'quack', 'ACTIVE');");
+        validateDuckInDb(runner,id,"yellow","0.01","wood", "quack", "ACTIVE");
     }
 
 }

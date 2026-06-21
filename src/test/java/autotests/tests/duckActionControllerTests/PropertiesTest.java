@@ -1,33 +1,92 @@
 package autotests.tests.duckActionControllerTests;
-
+import autotests.clients.DuckClient;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.testng.CitrusParameters;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
-import autotests.clients.duckActionControllerClients.PropertiesClient;
 
 import static com.consol.citrus.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
+@Epic("Тесты duck-action-controller")
+@Feature("Параметры уточки")
+@Story("Эндпоинт /api/duck/action/properties")
+public class PropertiesTest extends DuckClient {
+    @Test(description = "Проверка Properties с нечетным id", dataProvider = "oddDucks")
+    @CitrusTest
+    @CitrusParameters({"id", "color", "height", "material", "sound", "wingsState", "runner"})
+    public void propertiesOddIdTest(String id,
+                                    String color,
+                                    String height,
+                                    String material,
+                                    String sound,
+                                    String wingsState,
+                                    @Optional @CitrusResource TestCaseRunner runner) {
 
-public class PropertiesTest extends PropertiesClient {
-    @Test(description = "Проверка Properties с четным id")
-    @CitrusTest
-    public void propertiesTest1(@Optional @CitrusResource TestCaseRunner runner){
-      duckProperties(runner,"2");
-        validateResponse( runner, jsonPath()
-                .expression("$", "{}"));
+        duckProperties(runner, id);
+
+        if ("wood".equals(material)) {
+            validateResponseWithoutId(runner, "ProretiesTest/DackPropertiesResponse_woodPropertiesTest.json");
+        } else {
+            validateResponse(runner, jsonPath()
+                    .expression("$.color", color)
+                    .expression("$.height", height)
+                    .expression("$.material", material)
+                    .expression("$.sound", sound)
+                    .expression("$.wingsState", wingsState));
+        }
     }
-    @Test(description = "Проверка Properties с нечетным id")
+
+    @Test(description = "Проверка Properties с четным id", dataProvider = "evenDucks")
     @CitrusTest
-    public void propertiesTest2(@Optional @CitrusResource TestCaseRunner runner){
-        duckProperties(runner,"1");
-        validateResponse( runner, jsonPath()
-                .expression("$.color", "yellow")
-                .expression("$.height", "@isNumber()@")
-                .expression("$.material", "rubber")
-                .expression("$.sound", "quack")
-                .expression("$.wingsState", "ACTIVE")
-        );
+    @CitrusParameters({"id", "color", "height", "material", "sound", "wingsState", "runner"})
+
+    public void propertiesEvenIdTest(String id,
+                                     String color,
+                                     String height,
+                                     String material,
+                                     String sound,
+                                     String wingsState,
+                                     @Optional @CitrusResource TestCaseRunner runner) {
+
+        duckProperties(runner, id);
+
+        if ("wood".equals(material)) {
+            validateResponseWithoutId(runner, "ProretiesTest/DackPropertiesResponse_woodPropertiesTest.json");
+        } else {
+            validateResponse(runner, jsonPath()
+                    .expression("$.color", color)
+                    .expression("$.height", height)
+                    .expression("$.material", material)
+                    .expression("$.sound", sound)
+                    .expression("$.wingsState", wingsState));
+        }
+    }
+
+    @DataProvider(name = "oddDucks")
+    public Object[][] oddDucks() {
+        return new Object[][]{
+                {"1", "pink", "1.0", "rubber", "quack", "ACTIVE", null},
+                {"3", "yellow", "2.0", "rubber", "quack", "ACTIVE", null},
+                {"5", "yellow", "1.0", "wood", "quack", "ACTIVE", null},
+                {"7", "yellow", "1.0", "rubber", "quack-quack", "ACTIVE", null},
+                {"9", "yellow", "1.0", "rubber", "quack", "FIXED", null}
+        };
+    }
+
+    @DataProvider(name = "evenDucks")
+    public Object[][] evenDucks() {
+        return new Object[][]{
+                {"2", "pink", "1.0", "rubber", "quack", "ACTIVE", null},
+                {"4", "yellow", "2.0", "rubber", "quack", "ACTIVE", null},
+                {"6", "yellow", "1.0", "wood", "quack", "ACTIVE", null},
+                {"8", "yellow", "1.0", "rubber", "quack-quack", "ACTIVE", null},
+                {"10", "yellow", "1.0", "rubber", "quack", "FIXED", null}
+        };
     }
 
 

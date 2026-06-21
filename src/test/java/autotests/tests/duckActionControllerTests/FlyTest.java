@@ -1,48 +1,66 @@
 package autotests.tests.duckActionControllerTests;
 
+import autotests.clients.DuckClient;
+import autotests.payloads.response.MessageResponse;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
-import autotests.clients.duckActionControllerClients.FlyClient;
 
-import static com.consol.citrus.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
-
-public class FlyTest extends FlyClient {
-
+import static com.consol.citrus.container.FinallySequence.Builder.doFinally;
+@Epic("Тесты duck-action-controller")
+@Feature("Полет уточки")
+@Story("Эндпоинт /api/duck/action/swim")
+public class FlyTest extends DuckClient {
     @Test(description = "уточка с активными крыльями")
     @CitrusTest
     public  void FlyTest1(@Optional @CitrusResource TestCaseRunner runner) {
-        createDuck(runner, "yellow", 0.01, "rubber", "quack", "ACTIVE");
-        validateCreateResponse(runner, jsonPath()
-                .expression("$.id", "@isNumber()@")
-                .expression("$.wingsState", "ACTIVE"));
+        String id = runner.variable("duckId","123");
+        runner.$(doFinally().actions(context->
+                updateDatabase(runner,"DELETE FROM DUCK WHERE ID =${duckId}")));
+        updateDatabase(runner,
+                "insert into DUCK (id,color,height,material,sound,wings_state)\n" +
+                        "values(" + id + ",'yellow',0.01, 'rubber', 'quack', 'ACTIVE');");
         duckFly(runner,"${duckId}");
-        validateResponse( runner, jsonPath()
-                .expression("$.message", "I am flying :)"));
+        validateDuckInDb(runner,id,"yellow","0.01","rubber", "quack", "ACTIVE");
+        MessageResponse expectedResponse = new MessageResponse();
+        expectedResponse.setMessage("I am flying :)");
+        validateResponse(runner, expectedResponse);
     }
     @Test(description = "уточка с неактивными крыльями")
     @CitrusTest
     public  void FlyTest2(@Optional @CitrusResource TestCaseRunner runner) {
-        createDuck(runner, "yellow", 0.01, "rubber", "quack", "FIXED");
-        validateCreateResponse(runner, jsonPath()
-                .expression("$.id", "@isNumber()@")
-                .expression("$.wingsState", "FIXED"));
+        String id = runner.variable("duckId","123");
+        runner.$(doFinally().actions(context->
+                updateDatabase(runner,"DELETE FROM DUCK WHERE ID =${duckId}")));
+        updateDatabase(runner,
+                "insert into DUCK (id,color,height,material,sound,wings_state)\n" +
+                        "values(" + id + ",'yellow',0.01, 'rubber', 'quack', 'FIXED');");
         duckFly(runner,"${duckId}");
-        validateResponse( runner, jsonPath()
-                .expression("$.message", "I can not fly :C"));
+        validateDuckInDb(runner,id,"yellow","0.01","rubber", "quack", "FIXED");
+        MessageResponse expectedResponse = new MessageResponse();
+        expectedResponse.setMessage("I can not fly :C");
+        validateResponse(runner, expectedResponse);
     }
+
     @Test(description = "уточка с неопределенными крыльями")
     @CitrusTest
     public  void FlyTest3(@Optional @CitrusResource TestCaseRunner runner) {
-        createDuck(runner, "yellow", 0.01, "rubber", "quack", "UNDEFINED");
-        validateCreateResponse(runner, jsonPath()
-                .expression("$.id", "@isNumber()@")
-                .expression("$.wingsState", "UNDEFINED"));
-        duckFly(runner, "${duckId}");
-        validateResponse(runner, jsonPath()
-                .expression("$.message", "Wings are not detected :("));
+        String id = runner.variable("duckId","123");
+        runner.$(doFinally().actions(context->
+                updateDatabase(runner,"DELETE FROM DUCK WHERE ID =${duckId}")));
+        updateDatabase(runner,
+                "insert into DUCK (id,color,height,material,sound,wings_state)\n" +
+                        "values(" + id + ",'yellow',0.01, 'rubber', 'quack', 'UNDEFINED');");
+        duckFly(runner,"${duckId}");
+        validateDuckInDb(runner,id,"yellow","0.01","rubber", "quack", "UNDEFINED");
+        MessageResponse expectedResponse = new MessageResponse();
+        expectedResponse.setMessage("Wings are not detected :(");
+        validateResponse(runner, expectedResponse);
     }
 
 }
